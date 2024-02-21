@@ -1,6 +1,6 @@
 PVS.fit<- function(z, y, train.1, train.2,  
 lambda.min=NULL, lambda.min.h=NULL, lambda.min.l=NULL, factor.pn=1,
-nlambda=100, vn=ncol(z), nfolds=10, seed=123,wn=c(10,15,20),
+nlambda=100, vn=ncol(z), nfolds=10, seed=123,wn=c(10,15,20),range.grid=NULL,
 criterion=c("GCV", "BIC", "AIC", "k-fold-CV"), 
 penalty=c("grLasso", "grMCP", "grSCAD", "gel", "cMCP", "gBridge", "gLasso", "gMCP"), 
 max.iter=1000)
@@ -14,6 +14,7 @@ n1 <- length(train.1)
 n2 <- length(train.2)
 num.wn <- length(wn)
 pn <- ncol(z)
+if(is.null(range.grid)) range.grid=c(1,pn)
 lambda.min.pn.high<-lambda.min.h
 lambda.min.pn.low<-lambda.min.l
 indexes.beta <- 1:pn
@@ -103,7 +104,7 @@ call<-match.call()
 out<-list(fitted.values=yhp,residuals=res,beta.est=beta.est,indexes.beta.nonnull=indexes.beta.nonnull2, IC=IC, lambda.opt=lambda.opt,vn.opt=vn.opt,
 		  beta2=beta2,  IC2=IC2,   lambda2=lambda2, indexes.beta.nonnull=indexes.beta.nonnull2,  index02=index2,
 		  beta1=beta1, IC1=IC1, lambda1=lambda1, index01=index01, index1=index1, 
-		  call=call,y=y,z=z,train.1=train.1, train.2=train.2,
+		  call=call,y=y,z=z,train.1=train.1, train.2=train.2,range.grid=range.grid,
 		  penalty=penalty, criterion=criterion,max.iter=max.iter,wn=wn)
 class(out)<-"PVS"
 out

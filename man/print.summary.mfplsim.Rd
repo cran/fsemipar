@@ -27,7 +27,7 @@ Summarize information from multi-functional partial linear single-index model (M
   \item{x}{
 Output of the \code{FASSMR.kernel.fit}, \code{FASSMR.kNN.fit}, \code{IASSMR.kernel.fit} or \code{IASSMR.kNN.fit} functions (i.e. an object of the class \code{FASSMR.kernel},  \code{FASSMR.kNN}, \code{IASSMR.kernel} or \code{IASSMR.kNN}).
 }
-  \item{\dots}{
+  \item{\dots}{Further arguments passed to or from other methods.
 }
 \item{object}{
 Output of the \code{FASSMR.kernel.fit}, \code{FASSMR.kNN.fit}, \code{IASSMR.kernel.fit} or \code{IASSMR.kNN.fit} functions (i.e. an object of the class \code{FASSMR.kernel},  \code{FASSMR.kNN}, \code{IASSMR.kernel} or \code{IASSMR.kNN}).

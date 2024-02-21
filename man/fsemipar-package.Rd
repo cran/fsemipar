@@ -5,15 +5,7 @@
 \title{
 \packageTitle{fsemipar}
 }
-\description{
- This package is devoted to estimation or simultaneous estimation and variable selection of
-several functional semiparametric models with scalar response, such us the functional single-index model, 
-the semi-functional partial linear model or the semi-functional partial linear single-index model. 
-It also includes algortithms for dealing with scalar covariates with linear effect coming from the discretization of a curve in the cases of the linear model, the multi-functional partial linear model
-and the multi-functional partial linear single-index model. 
-
-In many cases, the estimation procedures involve nonparametric regression techniques. Then, routines for both kernel-based and kNN-based estimation with Nadaraya-Watson weights are provided for all of them. 
-In addition, the package contains routines to compute predictions from all the models and estimation procedures.
+\description{ This package is devoted to estimation or simultaneous estimation and variable selection of several functional semiparametric models with scalar response, such as the functional single-index model, the semi-functional partial linear model or the semi-functional partial linear single-index model. It also contains algorithms for addressing estimation and variable selection in the linear model, the multi-functional partial linear model, and the multi-functional partial linear single-index model when the scalar covariates with linear effects come from the discretization of a curve. In addition, the package has routines for kernel- and kNN-based estimation with Nadaraya-Watson weights of models with a nonparametric component. It also contains functions to compute predictions from all the considered models and estimation procedures.
 }
 \details{
 The package could be divided in several tematic sections:

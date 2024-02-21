@@ -100,25 +100,25 @@ The sparse semi-functional partial linear model (SSFPLM) is given by the express
 \deqn{
 Y_i=Z_{i1}\beta_{01}+\dots+Z_{ip_n}\beta_{0p_n}+m(X_i)+\varepsilon_i\ \ \ i=1,\dots,n,
 }
-where \eqn{Y_i} denotes a scalar response, \eqn{Z_{i1},\dots,Z_{ip_n}} are random covariates taking values in \eqn{\mathbb{R}} and \eqn{X_i} is a functional random covariate valued in some semi-metric space \eqn{\mathcal{H}}. In this equation,
-	\eqn{\pmb{\beta}_0=(\beta_{01},\dots,\beta_{0p_n})^{\top} \in \mathbb{R}^{p_n}} and \eqn{m(\cdot)} are a vector of unknown real parameters and an unknown smooth real-valued function, respectively. In addition, \eqn{\varepsilon_i} is the random error.
+where \eqn{Y_i} denotes a scalar response, \eqn{Z_{i1},\dots,Z_{ip_n}} are real random covariates and \eqn{X_i} is a functional random covariate valued in some semi-metric space \eqn{\mathcal{H}}. In this equation,
+	\eqn{\mathbf{\beta}_0=(\beta_{01},\dots,\beta_{0p_n})^{\top}} and \eqn{m(\cdot)} are a vector of unknown real parameters and an unknown smooth real-valued function, respectively. In addition, \eqn{\varepsilon_i} is the random error.
 
 
 In this function the SSFPLM is fitted using the penalised least-squares approach. The first idea is to transform the SSFPLM into a linear model by extracting from \eqn{Y_i} and \eqn{Z_{ij}} (\eqn{j=1,\ldots,p_n}) the effect of the functional covariate \eqn{X_i} using functional nonparametric regression (see, for details, Ferraty and Vieu, 2006). This is made using  kNN estimation with Nadaraya-Watson weights.
 
 Then, an approximate linear model is obtained:
-\deqn{\widetilde{\pmb{Y}}\approx\widetilde{\pmb{Z}}\pmb{\beta}_0+\pmb{\varepsilon},}
+\deqn{\widetilde{\mathbf{Y}}\approx\widetilde{\mathbf{Z}}\mathbf{\beta}_0+\mathbf{\varepsilon},}
 and the penalised least-squares procedure is applied to this model by minimising 
 \deqn{
-\mathcal{Q}\left(\pmb{\beta}\right)=\frac{1}{2}\left(\widetilde{\pmb{Y}}-\widetilde{\pmb{Z}}\pmb{\beta}\right)^{\top}\left(\widetilde{\pmb{Y}}-\widetilde{\pmb{Z}}\pmb{\beta}\right)+n\sum_{j=1}^{p_n}\mathcal{P}_{\lambda_{j_n}}\left(|\beta_j|\right), \quad (1)
+\mathcal{Q}\left(\mathbf{\beta}\right)=\frac{1}{2}\left(\widetilde{\mathbf{Y}}-\widetilde{\mathbf{Z}}\mathbf{\beta}\right)^{\top}\left(\widetilde{\mathbf{Y}}-\widetilde{\mathbf{Z}}\mathbf{\beta}\right)+n\sum_{j=1}^{p_n}\mathcal{P}_{\lambda_{j_n}}\left(|\beta_j|\right), \quad (1)
 }
 
-where \eqn{\pmb{\beta}=(\beta_1,\ldots,\beta_{p_n})^{\top}, \ \mathcal{P}_{\lambda_{j_n}}\left(\cdot\right)} is a penalty function (specified in the argument \code{penalty}) and \eqn{\lambda_{j_n} > 0} is a tuning parameter.
+where \eqn{\mathbf{\beta}=(\beta_1,\ldots,\beta_{p_n})^{\top}, \ \mathcal{P}_{\lambda_{j_n}}\left(\cdot\right)} is a penalty function (specified in the argument \code{penalty}) and \eqn{\lambda_{j_n} > 0} is a tuning parameter.
 To reduce  the quantity of tuning parameters, \eqn{\lambda_j}, to be selected for each sample, we consider \eqn{\lambda_j = \lambda \widehat{\sigma}_{\beta_{0,j,OLS}}}, where \eqn{\beta_{0,j,OLS}} denotes the OLS estimate of \eqn{\beta_{0,j}} and \eqn{\widehat{\sigma}_{\beta_{0,j,OLS}}} is the estimated standard deviation. Both \eqn{\lambda} and \eqn{k} (in the kNN estimation) are selected using the objetive criterion specified in the argument \code{criterion}.
 
 
-Finally, after estimating \eqn{\pmb{\beta}_0} by minimising (1), we deal with the estimation of the nonlinear function \eqn{m(\cdot)}.
-For that, we employ again the  kNN procedure with Nadaraya-Watson weights to smooth the partial residuals \eqn{Y_i-\pmb{Z}_i^{\top}\widehat{\pmb{\beta}}}.
+Finally, after estimating \eqn{\mathbf{\beta}_0} by minimising (1), we deal with the estimation of the nonlinear function \eqn{m(\cdot)}.
+For that, we employ again the  kNN procedure with Nadaraya-Watson weights to smooth the partial residuals \eqn{Y_i-\mathbf{Z}_i^{\top}\widehat{\mathbf{\beta}}}.
 
 For further details on the estimation procedure of the SSFPLM, see Aneiros et al. (2015).
 

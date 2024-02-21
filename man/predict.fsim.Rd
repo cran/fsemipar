@@ -24,7 +24,7 @@ A matrix containing new observations of the functional covariate collected by ro
   \item{y.test}{
 (optional) A vector containing the new observations of the response.
 }
-  \item{\dots}{
+  \item{\dots}{Further arguments passed to or from other methods.
 
 }
 }

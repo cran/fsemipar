@@ -31,7 +31,7 @@ Matrix containing the new observations of the scalar covariate collected by row.
   \item{option}{
 Allows the choice between 1 and 2 in \code{sfpl.kernel} objects, and 1, 2 and 3 in \code{sfpl.kNN} objects. The default is 1. See the section \code{Details}.
 }
-  \item{\dots}{
+  \item{\dots}{Further arguments passed to or from other methods.
 }
 }
 \details{

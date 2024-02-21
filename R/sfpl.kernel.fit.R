@@ -2,7 +2,7 @@ sfpl.kernel.fit <- function(x, z, y,
 semimetric="deriv", q=NULL,
 min.q.h=0.05, max.q.h=0.5, h.seq = NULL, num.h =10,
 range.grid=NULL,  kind.of.kernel="quad", nknot=NULL, 
-lambda.min=NULL, lambda.min.h=NULL, lambda.min.l=NULL, factor.pn=NULL,
+lambda.min=NULL, lambda.min.h=NULL, lambda.min.l=NULL, factor.pn=1,
 nlambda=100, lambda.seq=NULL,vn=ncol(z), nfolds=10, seed=123,   
 criterion=c("GCV", "BIC", "AIC", "k-fold-CV"),  
 penalty=c("grLasso", "grMCP", "grSCAD","gel", "cMCP", "gBridge", "gLasso", "gMCP"), 
@@ -21,7 +21,6 @@ indexes.beta <- 1:pn
 p <- ncol(x)
 kind.of.semimetric <- paste("semimetric.", semimetric, sep = "")
 if (is.null(q)) q<-ifelse(semimetric=="deriv",0,2)
-if (is.null(factor.pn)) factor.pn <- 1
 if (is.null(lambda.min)) {
 	if (is.null(lambda.min.pn.high)) lambda.min.pn.high <- 0.05
 	if (is.null(lambda.min.pn.low)) lambda.min.pn.low <- 1e-4

@@ -71,7 +71,7 @@ A specification for the default plotting color. The default is \code{color=1}.
   \item{cex.main}{
 The magnification to be used for main titles relative to the current setting of \code{cex}. The default is 1.5.
 }
-  \item{\dots}{
+  \item{\dots}{Further arguments passed to or from other methods.
 
 }
 }

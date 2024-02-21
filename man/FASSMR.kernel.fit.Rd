@@ -110,7 +110,7 @@ The multi-functional partial linear single-index model (MFPLSIM) is given by the
 where 
 \itemize{
 \item \eqn{Y_i} is a real random response and \eqn{X_i} denotes a random element belonging to some separable Hilbert space \eqn{\mathcal{H}} with inner product denoted by \eqn{\left\langle\cdot,\cdot\right\rangle}. The second functional predictor \eqn{\zeta_i} is supposed to be a random curve defined on some interval \eqn{[a,b]} which  is observed at the points \eqn{a\leq t_1<\dots<t_{p_n}\leq b}. 
-\item  \eqn{\pmb{\beta}_0=(\beta_{01},\dots,\beta_{0p_n})^{\top}} is a vector of unknown real coefficients and \eqn{r(\cdot)} denotes a smooth unknown link function. In addition, \eqn{\theta_0} is an unknown functional direction in \eqn{\mathcal{H}}.  
+\item  \eqn{\mathbf{\beta}_0=(\beta_{01},\dots,\beta_{0p_n})^{\top}} is a vector of unknown real coefficients and \eqn{r(\cdot)} denotes a smooth unknown link function. In addition, \eqn{\theta_0} is an unknown functional direction in \eqn{\mathcal{H}}.  
 \item \eqn{\varepsilon_i} denotes the random error.
 }
 In  the MFPLSIM, we assume that only a few scalar variables from the set \eqn{\{\zeta(t_1),\dots,\zeta(t_{p_n})\}} form part of the model. Therefore, we must select the relevant variables in the linear component (the impact points of the curve \eqn{\zeta} on the response) and estimate the model.
@@ -121,48 +121,48 @@ In this function, the MFPLSIM is fitted using the FASSMR algorithm.  The main id
 To explain the algorithm we assume, without lost of generality, that the number \eqn{p_n} of linear covariates can be expressed as follows: \eqn{p_n=q_nw_n} with \eqn{q_n} and \eqn{w_n} integers. 
 The previous consideration allows to build a subset of the initial \eqn{p_n} linear covariates, which contains only \eqn{w_n} equally spaced discretized observations of  \eqn{\zeta} covering the whole interval  \eqn{[a,b]}. This subset is the following:
  \deqn{
-	\mathcal{R}_n^{\pmb{1}}=\left\{\zeta\left(t_k^{\pmb{1}}\right),\ \ k=1,\dots,w_n\right\},
+	\mathcal{R}_n^{\mathbf{1}}=\left\{\zeta\left(t_k^{\mathbf{1}}\right),\ \ k=1,\dots,w_n\right\},
 } 
-	where  \eqn{t_k^{\pmb{1}}=t_{\left[(2k-1)q_n/2\right]}} and  \eqn{\left[z\right]} denotes the smallest integer not less than  \eqn{z\in\mathbb{R}}.
+	where  \eqn{t_k^{\mathbf{1}}=t_{\left[(2k-1)q_n/2\right]}} and  \eqn{\left[z\right]} denotes the smallest integer not less than the real number \eqn{z}.
 
-In this way, we consider the following reduced model, which involves only the linear covariates belonging to \eqn{\mathcal{R}_n^{\pmb{1}}}:
+We consider the following reduced model, which involves only the linear covariates belonging to \eqn{\mathcal{R}_n^{\mathbf{1}}}:
 	\deqn{
-	Y_i=\sum_{k=1}^{w_n}\beta_{0k}^{\pmb{1}}\zeta_i(t_k^{\pmb{1}})+r^{\pmb{1}}\left(\left<\theta_0^{\pmb{1}},\mathcal{X}_i\right>\right)+\varepsilon_i^{\pmb{1}}.
+	Y_i=\sum_{k=1}^{w_n}\beta_{0k}^{\mathbf{1}}\zeta_i(t_k^{\mathbf{1}})+r^{\mathbf{1}}\left(\left<\theta_0^{\mathbf{1}},\mathcal{X}_i\right>\right)+\varepsilon_i^{\mathbf{1}}.
 }
-The eligible numbers of linear covariates to build the reduced model are provided to the program in the argument \code{wn}.
+The program receives the eligible numbers of linear covariates for building the reduced model through the argument \code{wn}.
 Then, the penalised least-squares variable selection procedure, with kernel estimation, is applied to the reduced model. This is done by means of the function \code{\link{sfplsim.kernel.fit}}, which requires remaining arguments (for details, see the documentation of the function \code{\link{sfplsim.kernel.fit}}). The estimates obtained after that are the outputs of the FASSMR algorithm. For further details on this algorithm, see Novo et al. (2021).
 
 \bold{Remark}: If the condition  \eqn{p_n=w_n q_n} fails, the function considers not fixed  \eqn{q_n=q_{n,k}} values \eqn{k=1,\dots,w_n},  when \eqn{p_n/w_n} is not an integer number. Specifically:
 \deqn{
-	q_{n,k}= \left\{\begin{aligned}
-	&[p_n/w_n]+1&  \quad k\in\{1,\dots,p_n-w_n[p_n/w_n]\},\\
-	&[p_n/w_n]&\quad k\in\{p_n-w_n[p_n/w_n]+1,\dots,w_n\}, \\
-	\end{aligned}
+	q_{n,k}= \left\{\begin{array}{ll}
+	[p_n/w_n]+1 &   k\in\{1,\dots,p_n-w_n[p_n/w_n]\},\\
+	{[p_n/w_n]} & k\in\{p_n-w_n[p_n/w_n]+1,\dots,w_n\},
+	\end{array}
 	\right.
 }
-	where \eqn{[z]} denotes the integer part of \eqn{z\in\mathbb{R}}.
+	where \eqn{[z]} denotes the integer part of the real number \eqn{z}.
 
 }
 \value{
 \item{call}{The matched call.}
 \item{fitted.values}{Estimated scalar response.}
 \item{residuals}{Differences between \code{y} and the \code{fitted.values}}
-\item{beta.est}{\eqn{\hat{\pmb{\beta}}} (i. e. estimate of \eqn{\pmb{\beta}_0} when the optimal tuning parameters \code{w.opt}, \code{lambda.opt}, \code{h.opt} and \code{vn.opt} are used).}
-\item{beta.red}{Estimate of \eqn{\beta_0^{\pmb{1}}} in the reduced model when the optimal tuning parameters \code{w.opt}, \code{lambda.opt}, \code{h.opt} and \code{vn.opt} are used.}
+\item{beta.est}{\eqn{\hat{\mathbf{\beta}}} (i. e. estimate of \eqn{\mathbf{\beta}_0} when the optimal tuning parameters \code{w.opt}, \code{lambda.opt}, \code{h.opt} and \code{vn.opt} are used).}
+\item{beta.red}{Estimate of \eqn{\beta_0^{\mathbf{1}}} in the reduced model when the optimal tuning parameters \code{w.opt}, \code{lambda.opt}, \code{h.opt} and \code{vn.opt} are used.}
 \item{theta.est}{Coefficients of \eqn{\hat{\theta}} in the B-spline basis (i. e. estimate of \eqn{\theta_0}when the optimal tuning parameters \code{w.opt}, \code{lambda.opt}, \code{h.opt} and \code{vn.opt} are used): a vector of \code{length(order.Bspline+nknot.theta)}.}
 \item{indexes.beta.nonnull}{Indexes of the non-zero \eqn{\hat{\beta_{j}}}.}
 \item{h.opt}{Selected bandwidth (when \code{w.opt} is considered).}
-\item{w.opt}{Selected size for  \eqn{\mathcal{R}_n^{\pmb{1}}}.}
+\item{w.opt}{Selected size for  \eqn{\mathcal{R}_n^{\mathbf{1}}}.}
 \item{lambda.opt}{Selected value of the penalisation parameter (when \code{w.opt} is considered).}
 \item{IC}{Value of the criterion function considered to select \code{w.opt}, \code{lambda.opt}, \code{h.opt} and \code{vn.opt}.}
 \item{vn.opt}{Selected value of \code{vn} (when \code{w.opt} is considered).}
-\item{beta.w}{Estimate of \eqn{\beta_0^{\pmb{1}}}  for each value of the sequence \code{wn}.}
-\item{theta.w}{Estimate of \eqn{\theta_0^{\pmb{1}}} for each value of the sequence \code{wn} (i.e. its coefficients in the B-spline basis).} 
+\item{beta.w}{Estimate of \eqn{\beta_0^{\mathbf{1}}}  for each value of the sequence \code{wn}.}
+\item{theta.w}{Estimate of \eqn{\theta_0^{\mathbf{1}}} for each value of the sequence \code{wn} (i.e. its coefficients in the B-spline basis).} 
 \item{IC.w}{Value of the criterion function for each value of the sequence \code{wn}.}
 \item{indexes.beta.nonnull.w}{Indexes of the non-zero linear coefficients for each value of the sequence \code{wn}.} 
 \item{lambda.w}{Selected value of penalisation parameter for each value of the sequence \code{wn}.}
 \item{h.w}{Selected bandwidth for each value of the sequence \code{wn}.}
-\item{index01}{Indexes of the covariates (in the whole set of \eqn{p_n}) used to build  \eqn{\mathcal{R}_n^{\pmb{1}}} for each value of the sequence \code{wn}.}
+\item{index01}{Indexes of the covariates (in the whole set of \eqn{p_n}) used to build  \eqn{\mathcal{R}_n^{\mathbf{1}}} for each value of the sequence \code{wn}.}
 \item{...}{}
 }
 \references{

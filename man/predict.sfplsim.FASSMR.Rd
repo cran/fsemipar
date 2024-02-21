@@ -41,7 +41,7 @@ Matrix containing the new observations of the scalar covariates (SFPLSIM) or of 
   \item{option}{
 Allows the choice between 1 and 2. The default is 1. See the section \code{Details}.
 }
-  \item{\dots}{
+  \item{\dots}{Further arguments passed to or from other methods.
 
 }
 }
@@ -49,7 +49,7 @@ Allows the choice between 1 and 2. The default is 1. See the section \code{Detai
 To obtain the predictions of the response for \code{newdata.x} and \code{newdata.z}, two options are provided:
 \itemize{
 \item If \code{option=1}, we mantain all the estimations (\code{k.opt} or \code{h.opt}, \code{theta.est} and \code{beta.est}) to predict the functional single-index component of the model. 
-\item If \code{option=2}, we mantain \code{theta.est} and \code{beta.est}, while the tunning parameter (\eqn{h} or \eqn{k}) is seleted again to predict the functional single-index component of the model. This selection is performed using the cross-validation criterion in the functional single-index model associated.
+\item If \code{option=2}, we mantain \code{theta.est} and \code{beta.est}, while the tuning parameter (\eqn{h} or \eqn{k}) is selected again to predict the functional single-index component of the model. This selection is performed using the cross-validation criterion in the functional single-index model associated.
 }
 }
 \value{

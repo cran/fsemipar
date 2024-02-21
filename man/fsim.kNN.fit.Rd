@@ -59,13 +59,13 @@ w_{n,k,\hat{\theta}}(x,X_i)=\frac{K\left(H_{k,x,\hat{\theta}}^{-1}d_{\hat{\theta
 }
  where
  \itemize{
-\item \eqn{k\in \mathbb{Z}^+} is a smoothing factor (the number of nearest neighbours).
+\item the positive integer \eqn{k} is a smoothing factor, representing the number of nearest neighbours.
  
 \item \eqn{K} is a kernel function (see the argument \code{kind.of.kernel}).
 
 \item \eqn{d_{\hat{\theta}}(x_1,x_2)=|\langle\hat{\theta},x_1-x_2\rangle|} is the projection semi-metric, computed using \code{\link{semimetric.projec}} and \eqn{\hat{\theta}} is an estimate of \eqn{\theta_0}. 
 
-\item \eqn{H_{k,x,\hat{\theta}}=\min\{h\in \mathbb{R}^+ \text{ such that } \sum_{i=1}^n1_{B_{\hat{\theta}}(x,h)}(X_i)=k\}}, where \eqn{1_{B_{\hat{\theta}}(x,h)}(\cdot)} is the indicator function of the open ball created with the projection semi-metric with centre \eqn{x\in\mathcal{H}} and radius \eqn{h}.
+\item \eqn{H_{k,x,\hat{\theta}}=\min\{h\in R^+ \text{ such that } \sum_{i=1}^n1_{B_{\hat{\theta}}(x,h)}(X_i)=k\}}, where \eqn{1_{B_{\hat{\theta}}(x,h)}(\cdot)} is the indicator function of the open ball created with the projection semi-metric with centre \eqn{x\in\mathcal{H}} and radius \eqn{h}.
 }
 
 The procedure requires the estimation of the function-parameter \eqn{\theta_0}. Therefore, we use B-spline representation to build a set  \eqn{\Theta_n} of eligible functional indexes. The dimension of the B-spline basis is \code{order.Bspline}+\code{nknot.theta} and the set of eligible coefficients is obtained by calibrating (to ensure the identifiability of the model) the set of initial coefficients given in \code{seed.coeff}. The larger this set, the higher the size of \eqn{\Theta_n}. Since our approach requires intensive computation, we need a trade-off between the size of \eqn{\Theta_n} and the performance of the estimator. For that, Ait-Saidi et al. (2008) suggested considering \code{order.Bspline=3} and \code{seed.coeff=c(-1,0,1)}. For details on the construction of \eqn{\Theta_n} see Novo et al. (2019).

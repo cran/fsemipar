@@ -76,7 +76,7 @@ Knot.theta<-seq(a, b, length = nknot.theta + 2)[ - c(1, nknot.theta + 2)]
 delta.theta<-sort(c(rep(c(a, b),order.Bspline), Knot.theta))
 Bspline.theta<-splineDesign(delta.theta,x.t,order.Bspline)
 theta.rec<-Bspline.theta%*%THETA 
-plot(x.t,theta.rec,type="l",xlim=c(a,b),ylab="", xlab="range.grid X",main=expression(widehat(theta)[0]),cex.axis=cex.axis, cex.lab=cex.lab, cex=cex,col=col, cex.main=cex.main)
+plot(x.t,theta.rec,type="l",xlim=c(a,b),ylab="", xlab="range.grid X",main=expression(widehat(theta)[0]),cex.axis=cex.axis, cex.lab=cex.lab, cex=cex,col=col, cex.main=cex.main,lwd=2)
 x.hat.theta=projec(data=x$x, theta=x$theta.est, range.grid=x$range.grid,order.Bspline=x$order.Bspline, nknot=x$nknot,nknot.theta=x$nknot.theta)
 y.hat=fitted(x)
 vec=cbind(x.hat.theta,y.hat)

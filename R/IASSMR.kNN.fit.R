@@ -41,7 +41,7 @@ IC2 <- rep(Inf, length=num.wn)
 vn2<-numeric(num.wn)
 indexes.beta.nonnull2 <- list()
 for (w in 1:num.wn) {
-	cat("wn=", wn[w], ": ", w, "/", num.wn)
+	cat("wn=", wn[w])
 	num.veci <- trunc(pn/wn[w])
 	aux <- pn - wn[w]*num.veci
 	group <- 0

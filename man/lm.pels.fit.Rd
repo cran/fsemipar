@@ -69,14 +69,14 @@ The sparse linear model (SLM) is given by the expression:
 \deqn{
 Y_i=Z_{i1}\beta_{01}+\dots+Z_{ip_n}\beta_{0p_n}+\varepsilon_i\ \ \ i=1,\dots,n,
 }
-where \eqn{Y_i} denotes a scalar response, \eqn{Z_{i1},\dots,Z_{ip_n}} are random covariates taking values in \eqn{\mathbb{R}}. In this equation, \eqn{\pmb{\beta}_0=(\beta_{01},\dots,\beta_{0p_n})^{\top} \in \mathbb{R}^{p_n}} is a vector of unknown real parameters and \eqn{\varepsilon_i} is the random error.
+where \eqn{Y_i} denotes a scalar response, \eqn{Z_{i1},\dots,Z_{ip_n}} are real random covariates. In this equation, \eqn{\mathbf{\beta}_0=(\beta_{01},\dots,\beta_{0p_n})^{\top}} is a vector of unknown real parameters and \eqn{\varepsilon_i} is the random error.
 
 In this function, the SLM is fitted using the penalised least-squares approach by minimising 
 \deqn{
-\mathcal{Q}\left(\pmb{\beta}\right)=\frac{1}{2}\left(\pmb{Y}-\pmb{Z}\pmb{\beta}\right)^{\top}\left(\pmb{Y}-\pmb{Z}\pmb{\beta}\right)+n\sum_{j=1}^{p_n}\mathcal{P}_{\lambda_{j_n}}\left(|\beta_j|\right), \quad (1)
+\mathcal{Q}\left(\mathbf{\beta}\right)=\frac{1}{2}\left(\mathbf{Y}-\mathbf{Z}\mathbf{\beta}\right)^{\top}\left(\mathbf{Y}-\mathbf{Z}\mathbf{\beta}\right)+n\sum_{j=1}^{p_n}\mathcal{P}_{\lambda_{j_n}}\left(|\beta_j|\right), \quad (1)
 }
 
-where \eqn{\pmb{\beta}=(\beta_1,\ldots,\beta_{p_n})^{\top}, \ \mathcal{P}_{\lambda_{j_n}}\left(\cdot\right)} is a penalty function (specified in the argument \code{penalty}) and \eqn{\lambda_{j_n} > 0} is a tuning parameter.
+where \eqn{\mathbf{\beta}=(\beta_1,\ldots,\beta_{p_n})^{\top}, \ \mathcal{P}_{\lambda_{j_n}}\left(\cdot\right)} is a penalty function (specified in the argument \code{penalty}) and \eqn{\lambda_{j_n} > 0} is a tuning parameter.
 To reduce  the quantity of tuning parameters, \eqn{\lambda_j}, to be selected for each sample, we consider \eqn{\lambda_j = \lambda \widehat{\sigma}_{\beta_{0,j,OLS}}}, where \eqn{\beta_{0,j,OLS}} denotes the OLS estimate of \eqn{\beta_{0,j}} and \eqn{\widehat{\sigma}_{\beta_{0,j,OLS}}} is the estimated standard deviation; \eqn{\lambda} is selected using the objetive criterion specified in the argument \code{criterion}.
 
 For further details on the estimation procedure of the SLM, see, for instance, Fan and Li. (2001) or Fan and Lv (2011).

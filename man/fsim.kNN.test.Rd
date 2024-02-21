@@ -63,7 +63,7 @@ where
 \itemize{
 \item \eqn{K} is a kernel function (see the argument \code{kind.of.kernel}).
 
-\item for \eqn{x_1,x_2 \in \mathcal{H}, }  \eqn{d_{\theta}(x_1,x_2)=|\langle\theta,x_1-x_2\rangle|} is the projection semi-metric, computed using \code{\link{semimetric.projec}}. \item \eqn{H_{k,x,\theta}=\min\left\{h\in \mathbb{R}^+ \text{ such that } \sum_{i=1}^n1_{B_{\theta}(x,h)}(X_i)=k\right\}}, where \eqn{1_{B_{\theta}(x,h)}(\cdot)} is the indicator function of the open ball created with the projection semi-metric with centre \eqn{x\in\mathcal{H}} and radius \eqn{h}.
+\item for \eqn{x_1,x_2 \in \mathcal{H}, }  \eqn{d_{\theta}(x_1,x_2)=|\langle\theta,x_1-x_2\rangle|} is the projection semi-metric, computed using \code{\link{semimetric.projec}}. \item \eqn{H_{k,x,\theta}=\min\left\{h\in R^+ \text{ such that } \sum_{i=1}^n1_{B_{\theta}(x,h)}(X_i)=k\right\}}, where \eqn{1_{B_{\theta}(x,h)}(\cdot)} is the indicator function of the open ball created with the projection semi-metric with centre \eqn{x\in\mathcal{H}} and radius \eqn{h}.
 }
 If the argument \code{y.test} is given to the program (i. e. \code{if(!is.null(y.test))}), the function provides the mean squared error of prediction (see the value \code{MSE.test}) calculated as \code{mean((y.test-y.estimated.test)^2)}.
 

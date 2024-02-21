@@ -109,30 +109,30 @@ The sparse semi-functional partial linear single-index model (SSFPLSIM) is given
 \deqn{
 Y_i=Z_{i1}\beta_{01}+\dots+Z_{ip_n}\beta_{0p_n}+r(\left<\theta_0,X_i\right>)+\varepsilon_i\ \ \ i=1,\dots,n,
 }
-where \eqn{Y_i} denotes a scalar response, \eqn{Z_{i1},\dots,Z_{ip_n}} are random covariates taking values in \eqn{\mathbb{R}} and \eqn{X_i} is a functional random covariate valued in a separable Hilbert space \eqn{\mathcal{H}} with inner product \eqn{\left\langle \cdot, \cdot \right\rangle}. In this equation,
-	\eqn{\pmb{\beta}_0=(\beta_{01},\dots,\beta_{0p_n})^{\top} \in \mathbb{R}^{p_n}}, \eqn{\theta_0\in\mathcal{H}} and \eqn{r(\cdot)} are a vector of unknown real parameters, an unknown functional direction and an unknown smooth real-valued function, respectively. In addition, \eqn{\varepsilon_i} is the random error.
+where \eqn{Y_i} denotes a scalar response, \eqn{Z_{i1},\dots,Z_{ip_n}} are real random covariates and \eqn{X_i} is a functional random covariate valued in a separable Hilbert space \eqn{\mathcal{H}} with inner product \eqn{\left\langle \cdot, \cdot \right\rangle}. In this equation,
+	\eqn{\mathbf{\beta}_0=(\beta_{01},\dots,\beta_{0p_n})^{\top}}, \eqn{\theta_0\in\mathcal{H}} and \eqn{r(\cdot)} are a vector of unknown real parameters, an unknown functional direction and an unknown smooth real-valued function, respectively. In addition, \eqn{\varepsilon_i} is the random error.
 
 
 The SSFPLSIM is fitted using the penalised least-squares approach. The first idea is to transform the SSFPLSIM into a linear model by extracting from \eqn{Y_i} and \eqn{Z_{ij}} (\eqn{j=1,\ldots,p_n}) the effect of the functional covariate \eqn{X_i} using functional single-index regression. This is made using nonparametric kNN estimation (see, for details, the documentation of the function \code{fsim.kNN.fit}).
 
 Then, an approximate linear model is obtained:
-\deqn{\widetilde{\pmb{Y}}_{\theta_0}\approx\widetilde{\pmb{Z}}_{\theta_0}\pmb{\beta}_0+\pmb{\varepsilon},}
-and the penalised least-squares procedure is applied to this model by minimising over the pair \eqn{(\pmb{\beta},\theta)}
+\deqn{\widetilde{\mathbf{Y}}_{\theta_0}\approx\widetilde{\mathbf{Z}}_{\theta_0}\mathbf{\beta}_0+\mathbf{\varepsilon},}
+and the penalised least-squares procedure is applied to this model by minimising over the pair \eqn{(\mathbf{\beta},\theta)}
 \deqn{
-\mathcal{Q}\left(\pmb{\beta},\theta\right)=\frac{1}{2}\left(\widetilde{\pmb{Y}}_{\theta}-\widetilde{\pmb{Z}}_{\theta}\pmb{\beta}\right)^{\top}\left(\widetilde{\pmb{Y}}_{\theta}-\widetilde{\pmb{Z}}_{\theta}\pmb{\beta}\right)+n\sum_{j=1}^{p_n}\mathcal{P}_{\lambda_{j_n}}\left(|\beta_j|\right), \quad (1)
+\mathcal{Q}\left(\mathbf{\beta},\theta\right)=\frac{1}{2}\left(\widetilde{\mathbf{Y}}_{\theta}-\widetilde{\mathbf{Z}}_{\theta}\mathbf{\beta}\right)^{\top}\left(\widetilde{\mathbf{Y}}_{\theta}-\widetilde{\mathbf{Z}}_{\theta}\mathbf{\beta}\right)+n\sum_{j=1}^{p_n}\mathcal{P}_{\lambda_{j_n}}\left(|\beta_j|\right), \quad (1)
 }
 
-where \eqn{\pmb{\beta}=(\beta_1,\ldots,\beta_{p_n})^{\top}, \ \mathcal{P}_{\lambda_{j_n}}\left(\cdot\right)} is a penalty function (specified in the argument \code{penalty}) and \eqn{\lambda_{j_n} > 0} is a tuning parameter.
+where \eqn{\mathbf{\beta}=(\beta_1,\ldots,\beta_{p_n})^{\top}, \ \mathcal{P}_{\lambda_{j_n}}\left(\cdot\right)} is a penalty function (specified in the argument \code{penalty}) and \eqn{\lambda_{j_n} > 0} is a tuning parameter.
 To reduce  the quantity of tuning parameters, \eqn{\lambda_j}, to be selected for each sample, we consider \eqn{\lambda_j = \lambda \widehat{\sigma}_{\beta_{0,j,OLS}}}, where \eqn{\beta_{0,j,OLS}} denotes the OLS estimate of \eqn{\beta_{0,j}} and \eqn{\widehat{\sigma}_{\beta_{0,j,OLS}}} is the estimated standard deviation. Both \eqn{\lambda} and \eqn{k} (in the kNN estimation) are selected using the objetive criterion specified in the argument \code{criterion}.
 
 In addition, the function uses B-spline representation to build a set  \eqn{\Theta_n} of eligible functional indexes \eqn{\theta}. The dimension of the B-spline basis is \code{order.Bspline}+\code{nknot.theta} and the set of eligible coefficients is obtained by calibrating (to ensure the identifiability of the model) the set of initial coefficients given in \code{seed.coeff}. The larger this set, the higher the size of \eqn{\Theta_n}. Since our approach requires intensive computation, we need a trade-off between the size of \eqn{\Theta_n} and the performance of the estimator. For that, Ait-Saidi et al. (2008) suggested considering \code{order.Bspline=3} and \code{seed.coeff=c(-1,0,1)}. For details on the construction of \eqn{\Theta_n} see Novo et al. (2019).
 
 
-Finally, after estimating \eqn{\pmb{\beta}_0} and \eqn{\theta_0} by minimising (1), we deal with the estimation of the nonlinear function \eqn{r_{\theta_0}(\cdot)\equiv r\left(\left<\theta_0,\cdot\right>\right)}.
-For that we employ again the kNN procedure with Nadaraya-Watson weights to smooth the partial residuals \eqn{Y_i-\pmb{Z}_i^{\top}\widehat{\pmb{\beta}}}.
+Finally, after estimating \eqn{\mathbf{\beta}_0} and \eqn{\theta_0} by minimising (1), we deal with the estimation of the nonlinear function \eqn{r_{\theta_0}(\cdot)\equiv r\left(\left<\theta_0,\cdot\right>\right)}.
+For that we employ again the kNN procedure with Nadaraya-Watson weights to smooth the partial residuals \eqn{Y_i-\mathbf{Z}_i^{\top}\widehat{\mathbf{\beta}}}.
 
 For further details on the estimation procedure of the SSFPLSIM, see Novo et al. (2021).
-%\deqn{\widehat{r}_{\hat{\theta}}\left(x\right)=\sum_{i=1}^n w_{n,k,\widehat{\theta}}(x,X_i)\left(Y_i-\pmb{Z}_i^{\top}\widehat{\pmb{\beta}}_0\right);}
+%\deqn{\widehat{r}_{\hat{\theta}}\left(x\right)=\sum_{i=1}^n w_{n,k,\widehat{\theta}}(x,X_i)\left(Y_i-\mathbf{Z}_i^{\top}\widehat{\mathbf{\beta}}_0\right);}
 
 \bold{Remark}: We should note that if we set \code{lambda.seq}\eqn{=0}, we can obtain the non-penalised estimation of the model, i.e. the OLS estimation. It is convenient to use \code{lambda.seq}\eqn{\not=0} when one suspects there are irrelevant variables.
 
@@ -141,19 +141,19 @@ For further details on the estimation procedure of the SSFPLSIM, see Novo et al.
 \item{call}{The matched call.}
 \item{fitted.values}{Estimated scalar response.}
 \item{residuals}{Differences between \code{y} and the \code{fitted.values}}
-\item{beta.est}{\eqn{\hat{\pmb{\beta}}} (i. e. the estimate of \eqn{\pmb{\beta}_0} when the optimal tuning parameters \code{lambda.opt}, \code{k.opt} and \code{vn.opt} are used).}
+\item{beta.est}{\eqn{\hat{\mathbf{\beta}}} (i. e. the estimate of \eqn{\mathbf{\beta}_0} when the optimal tuning parameters \code{lambda.opt}, \code{k.opt} and \code{vn.opt} are used).}
 \item{theta.est}{Coefficients of \eqn{\hat{\theta}} in the B-spline basis (when the optimal tuning parameters \code{lambda.opt}, \code{k.opt} and \code{vn.opt}) are used): a vector of \code{length(order.Bspline+nknot.theta)}.}
 \item{indexes.beta.nonnull}{Indexes of the non-zero \eqn{\hat{\beta_{j}}}.}
 \item{k.opt}{Selected number of nearest neighbours.}
 \item{lambda.opt}{Selected value of the penalisation parameter \eqn{\lambda}.}
 \item{IC}{Value of the criterion function considered to select \code{lambda.opt}, \code{k.opt} and \code{vn.opt}.}
-\item{Q.opt}{Minimum value of the penalized criterion used to estimate \eqn{\pmb{\beta}_0} and \eqn{\theta_0}. That is, the value obtained using \code{theta.est} and \code{beta.est}.}
+\item{Q.opt}{Minimum value of the penalized criterion used to estimate \eqn{\mathbf{\beta}_0} and \eqn{\theta_0}. That is, the value obtained using \code{theta.est} and \code{beta.est}.}
 \item{Q}{Vector of dimension equal to the cardinal of \eqn{\Theta_n}, containing the values of the penalized criterion for each functional index in \eqn{\Theta_n}.}
 \item{m.opt}{Index of \eqn{\hat{\theta}} in the set \eqn{\Theta_n}.}
 \item{lambda.min.opt.max.mopt}{A grid of values in [\code{lambda.min.opt.max.mopt[1], lambda.min.opt.max.mopt[3]}] is considered to seek for the \code{lambda.opt} (\code{lambda.opt=lambda.min.opt.max.mopt[2]}).
 }
 \item{lambda.min.opt.max.m}{A grid of values in [\code{lambda.min.opt.max.m[m,1], lambda.min.opt.max.m[m,3]}] is considered to seek for the optimal \eqn{\lambda} (\code{lambda.min.opt.max.m[m,2]})
-used by the optimal \eqn{\pmb{\beta}} for each \eqn{\theta} in \eqn{\Theta_n}.}
+used by the optimal \eqn{\mathbf{\beta}} for each \eqn{\theta} in \eqn{\Theta_n}.}
 \item{knn.min.opt.max.mopt}{\code{k.opt=knn.min.opt.max.mopt[2]} (used by \code{theta.est} and \code{beta.est}) was seeked between \code{knn.min.opt.max.mopt[1]} and \code{knn.min.opt.max.mopt[3]} (no necessarly the step was 1).}
 \item{knn.min.opt.max.m}{For each \eqn{\theta} in \eqn{\Theta_n}, the optimal \eqn{k} (\code{knn.min.opt.max.m[m,2]}) used by the optimal \eqn{\beta} for this \eqn{\theta} was seeked between \code{knn.min.opt.max.m[m,1]} and \code{knn.min.opt.max.m[m,3]} (no necessarly the step was 1).}
 \item{knearest}{Sequence of eligible values for \eqn{k} considered to seek for \code{k.opt}.}

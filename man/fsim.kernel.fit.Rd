@@ -67,7 +67,7 @@ w_{n,h,\hat{\theta}}(x,X_i)=\frac{K\left(h^{-1}d_{\hat{\theta}}\left(X_i,x\right
 }
  where
  \itemize{
-\item \eqn{h\in \mathbb{R}^+} is the bandwidth.
+\item the real positive number \eqn{h} is the bandwidth.
  
 \item \eqn{K} is a kernel function (see the argument \code{kind.of.kernel}).
 
