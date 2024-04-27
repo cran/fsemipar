@@ -5,50 +5,56 @@
 \title{
 \packageTitle{fsemipar}
 }
-\description{ This package is devoted to estimation or simultaneous estimation and variable selection of several functional semiparametric models with scalar response, such as the functional single-index model, the semi-functional partial linear model or the semi-functional partial linear single-index model. It also contains algorithms for addressing estimation and variable selection in the linear model, the multi-functional partial linear model, and the multi-functional partial linear single-index model when the scalar covariates with linear effects come from the discretization of a curve. In addition, the package has routines for kernel- and kNN-based estimation with Nadaraya-Watson weights of models with a nonparametric component. It also contains functions to compute predictions from all the considered models and estimation procedures.
+\description{This package is dedicated to the estimation and simultaneous estimation and variable selection in several functional semiparametric models with scalar response. These include the functional single-index model, the semi-functional partial linear model, and the semi-functional partial linear single-index model. Additionally, it encompasses algorithms for addressing estimation and variable selection in linear models and bi-functional partial linear models  when the scalar covariates with linear effects are derived from the discretisation of a curve. Furthermore, the package offers routines for kernel- and kNN-based estimation using Nadaraya-Watson weights in models with a nonparametric or semiparametric component. It also includes S3 methods (predict, plot, print, summary) to facilitate statistical analysis across all the considered models and estimation procedures.
 }
 \details{
-The package could be divided in several tematic sections:
+The package can be divided into several thematic sections:
 \enumerate{
-\item Estimation and prediction of the functional single-index model.
+\item Estimation of the functional single-index model.
 \itemize{
 \item \code{\link{projec}}.
 \item \code{\link{semimetric.projec}}.
 \item \code{\link{fsim.kernel.fit}} and \code{\link{fsim.kNN.fit}}.
+\item \code{\link{fsim.kernel.fit.optim}} and \code{\link{fsim.kNN.fit.optim}}
 \item \code{\link{fsim.kernel.test}} and \code{\link{fsim.kNN.test}}.
-\item \code{predict, summary} and \code{print} methods for \code{fsim.kernel} and \code{fsim.kNN} classes.
+\item \code{predict, plot, summary} and \code{print} methods for \code{fsim.kernel} and \code{fsim.kNN} classes.
 }
-\item Variable selection, estimation and prediction of the semi-functional partial linear single-index model.
+\item Simultaneous estimation and variable selection in linear and semi-functional partial linear models.
+\enumerate{
+\item Linear model
 \itemize{
-\item \code{\link{sfplsim.kernel.fit}} and \code{\link{sfplsim.kNN.fit}}.
-\item \code{predict, summary} and \code{print} methods for \code{sfplsim.kernel} and \code{sfplsim.kNN} classes.
+\item \code{\link{lm.pels.fit}}. 
+\item \code{predict, summary, plot} and \code{print} methods for \code{lm.pels} class.
 }
-\item Variable selection, estimation and prediction of the semi-functional partial linear model.
+\item Semi-functional partial linear model.
 \itemize{
 \item \code{\link{sfpl.kernel.fit}} and \code{\link{sfpl.kNN.fit}}.
-\item \code{predict, summary} and \code{print} methods for \code{sfpl.kernel} and \code{sfpl.kNN} classes.
+\item \code{predict, summary, plot} and \code{print} methods for \code{sfpl.kernel} and \code{sfpl.kNN} classes.
 }
-\item Variable selection, estimation and prediction of the linear model.
+\item Semi-functional partial linear single-index model.
 \itemize{
-\item \code{\link{lm.pels.fit}}.
-\item \code{predict, summary} and \code{print} methods for \code{lm.pels} class.
+\item \code{\link{sfplsim.kernel.fit}} and \code{\link{sfplsim.kNN.fit}}.
+\item \code{predict, summary, plot} and \code{print} methods for \code{sfplsim.kernel} and \code{sfplsim.kNN} classes.
 }
-
-\item Variable selection, estimation and prediction of the linear model with covariates coming from the discretisation of a curve.
+}
+\item Algorithms for impact point selection in models with covariates derived from the discretisation of a curve.
+\enumerate{
+\item Linear model
 \itemize{
-\item \code{\link{PVS.fit}}.
-\item \code{predict, summary} and \code{print} methods for \code{PVS} class.
+\item \code{\link{PVS.fit}}. 
+\item \code{predict, summary, plot} and \code{print} methods for \code{PVS} class.
 }
-\item Variable selection, estimation and prediction of the multi-functional partial linear model.
+\item Bi-functional partial linear model.
 \itemize{
 \item \code{\link{PVS.kernel.fit}} and \code{\link{PVS.kNN.fit}}.
-\item \code{predict, summary} and \code{print} methods for \code{PVS.kernel} and \code{PVS.kNN} classes.
+\item \code{predict, summary, plot} and \code{print} methods for \code{PVS.kernel} and \code{PVS.kNN} classes.
 }
-\item Variable selection, estimation and prediction of the multi-functional partial linear single-index model.
+\item Bi-functional partial linear single-index model.
 \itemize{
 \item \code{\link{FASSMR.kernel.fit}} and \code{\link{FASSMR.kNN.fit}}.
 \item \code{\link{IASSMR.kernel.fit}} and \code{\link{IASSMR.kNN.fit}}.
-\item \code{predict, summary} and \code{print} methods for \code{FASSMR.kernel}, \code{FASSMR.kNN}, \code{IASSMR.kernel} and \code{IASSMR.kNN} classes.
+\item \code{predict, summary, plot} and \code{print} methods for \code{FASSMR.kernel}, \code{FASSMR.kNN}, \code{IASSMR.kernel} and \code{IASSMR.kNN} classes.
+}
 }
 \item Two datasets: \code{\link{Tecator}} and \code{\link{Sugar}}.
 }

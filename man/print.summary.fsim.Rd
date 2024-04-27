@@ -4,10 +4,10 @@
 \alias{summary.fsim.kernel}
 \alias{summary.fsim.kNN}
 \title{
-Summarize information from functional single-index model (FSIM) estimation methods
+Summarise information from FSIM estimation 
 }
 \description{
-\code{summary} and \code{print} functions for \code{fsim.kNN.fit} and \code{fsim.kernel.fit}.
+\code{summary} and \code{print} functions for \code{fsim.kNN.fit}, \code{fsim.kNN.fit.optim}, \code{fsim.kernel.fit} and \code{fsim.kernel.fit.optim}.
 }
 \usage{
 
@@ -18,11 +18,11 @@ Summarize information from functional single-index model (FSIM) estimation metho
 }
 \arguments{
   \item{x}{
-Output of the \code{fsim.kernel.fit} or \code{fsim.kNN.fit} functions (i.e. an object of the class \code{fsim.kernel} or \code{fsim.kNN}).
+Output of the \code{fsim.kernel.fit}, \code{fsim.kernel.fit.optim}, \code{fsim.kNN.fit} or \code{fsim.kNN.fit.optim} functions (i.e. an object of the class \code{fsim.kernel} or \code{fsim.kNN}).
 }
 \item{\dots}{ Further arguments.}
 \item{object}{
-Output of the \code{fsim.kernel.fit} or \code{fsim.kNN.fit} functions (i.e. an object of the class \code{fsim.kernel} or \code{fsim.kNN}).
+Output of the \code{fsim.kernel.fit}, \code{fsim.kernel.fit.optim}, \code{fsim.kNN.fit} or \code{fsim.kNN.fit.optim} functions (i.e. an object of the class \code{fsim.kernel} or \code{fsim.kNN}).
 }
 }
 

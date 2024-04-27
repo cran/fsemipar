@@ -4,8 +4,8 @@ min.q.h=0.05, max.q.h=0.5, h.seq = NULL, num.h = 10,
 range.grid=NULL, kind.of.kernel="quad", nknot=NULL,
 lambda.min=NULL, lambda.min.h=NULL, lambda.min.l=NULL, factor.pn=1, 
 nlambda=100, vn=ncol(z), nfolds=10, seed=123, wn=c(10,15,20),
-criterion=c("GCV", "BIC", "AIC", "k-fold-CV"), 
-penalty=c("grLasso", "grMCP", "grSCAD", "gel", "cMCP", "gBridge", "gLasso", "gMCP"), 
+criterion="GCV", 
+penalty="grSCAD", 
 max.iter=1000)
 {
 if (is.null(semimetric)) semimetric <- "deriv"
@@ -26,6 +26,7 @@ num.wn <- length(wn)
 pn <- ncol(z)
 indexes.beta <- 1:pn
 p<-ncol(x)
+if(is.null(range.grid)) range.grid<-c(1,p)
 h.opt <- 0
 index01 <- list()
 index1 <- list()
@@ -42,7 +43,7 @@ IC2 <- rep(Inf, length=num.wn)
 vn2<-numeric(num.wn)
 indexes.beta.nonnull2 <- list()
 for (w in 1:num.wn) {
-	message(w, "/", num.wn)
+	message("wn=", wn[w], ": ", w, "/", num.wn)
 	num.veci <- trunc(pn/wn[w])
 	aux <- pn - wn[w]*num.veci
 	group <- 0

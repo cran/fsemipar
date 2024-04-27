@@ -32,7 +32,7 @@ for (i in 1:num.h) {
     KERNEL[KERNEL > 1] <- 0
     KERNEL.aux <- KERNEL
     diag(KERNEL.aux) <- 0
-    Denom.aux <- apply(KERNEL.aux, 2, sum)
+    Denom.aux <- colSums(KERNEL.aux)
     Logic <- (Denom.aux == 0)
     while (sum(Logic) >= 1) {
         h <- 1.1 * h
@@ -41,12 +41,12 @@ for (i in 1:num.h) {
         KERNEL[KERNEL > 1] <- 0
         KERNEL.aux <- KERNEL
         diag(KERNEL.aux) <- 0
-        Denom.aux <- apply(KERNEL.aux, 2, sum)
+        Denom.aux <- colSums(KERNEL.aux)
         Logic <- (Denom.aux == 0)
         }
-    Denom <- apply(KERNEL, 2, sum)
+    Denom <- colSums(KERNEL)
     RESPKERNEL <- KERNEL * y
-    Response.predicted <- apply(RESPKERNEL, 2, sum)/Denom
+    Response.predicted <- colSums(RESPKERNEL)/Denom
     h.seq.corrected[i] <- h
     Yhat[, i] <- Response.predicted
 }

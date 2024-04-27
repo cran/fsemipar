@@ -4,8 +4,8 @@ knearest=NULL, min.knn=2, max.knn=NULL, step=NULL,
 range.grid=NULL,  kind.of.kernel="quad",  nknot=NULL, 
 lambda.min=NULL, lambda.min.h=NULL, lambda.min.l=NULL, factor.pn=1,
 nlambda=100, lambda.seq=NULL,vn=ncol(z), nfolds=10, seed=123, 
-criterion=c("GCV", "BIC", "AIC", "k-fold-CV"), 
-penalty=c("grLasso", "grMCP", "grSCAD","gel", "cMCP", "gBridge", "gLasso", "gMCP"), 
+criterion="GCV", 
+penalty="grSCAD", 
 max.iter=1000)
 {
 if (!is.matrix(z)) z <- as.matrix(z)
@@ -24,7 +24,7 @@ if (is.null(lambda.min)) {
 	if (is.null(lambda.min.pn.low)) lambda.min.pn.low <- 1e-4
 	lambda.min={if (nrow(z) > (factor.pn*ncol(z))) lambda.min.pn.low else lambda.min.pn.high} 
 }
-if (is.null(max.knn)) max.knn <- n%/%2
+if (is.null(max.knn)) max.knn <- n%/%5
 if (is.null(knearest)) {
 	if (is.null(step)) step <- ceiling(n/100)
 	if(step == 0) step <- 1
@@ -36,6 +36,7 @@ lambda2 <- 0
 knn2 <- 0
 beta2 <- list()
 index2 <- list()
+lambdas<-list()
 IC2 <- rep(Inf, length=num.vn)
 posicion.lambda.mean.dt <- matrix(0,num.vn,2)
 for (v in 1:num.vn) {
@@ -55,8 +56,8 @@ for (v in 1:num.vn) {
 	IC.s <- 0
 	if (criterion != "k-fold-CV") {
 		for (s in 1:num.knn) {
-			if (is.null(lambda.seq)) aux0 <- try(grpreg(X=as.matrix(XX[,,s]), y=yy[,s], group=group, lambda.min=lambda.min, nlambda=nlambda, penalty=penalty, max.iter=max.iter), silent=FALSE)
-			else aux0 <- try(grpreg(X=as.matrix(XX[,,s]), y=yy[,s], group=group, lambda=lambda.seq, penalty=penalty, max.iter=max.iter), silent=FALSE)
+			if (is.null(lambda.seq)) aux0 <- try(grpreg(X=as.matrix(XX[,,s]), y=yy[,s], group=group, lambda.min=lambda.min, nlambda=nlambda, penalty=penalty, max.iter=max.iter), silent=TRUE)
+			else aux0 <- try(grpreg(X=as.matrix(XX[,,s]), y=yy[,s], group=group, lambda=lambda.seq, penalty=penalty, max.iter=max.iter), silent=TRUE)
 			if (inherits(aux0,"try-error")) {
 				lambda.s[s] <- NaN
 				IC.s[s] <- NaN
@@ -73,9 +74,10 @@ for (v in 1:num.vn) {
 
 		s.opt <- order(IC.s)[1]
 		lambda2[v] <- lambda.s[s.opt]
+		lambdas[[v]]<-lambda.s
 		knn2[v] <- knearest[s.opt]
 		IC2[v] <- IC.s[s.opt]
-		aux <- try(grpreg(X=as.matrix(XX[,,s.opt]), y=yy[,s.opt], group=group, lambda=lambda2[v], penalty=penalty, max.iter=max.iter), silent=FALSE)
+		aux <- try(grpreg(X=as.matrix(XX[,,s.opt]), y=yy[,s.opt], group=group, lambda=lambda2[v], penalty=penalty, max.iter=max.iter), silent=TRUE)
 		if (inherits(aux,"try-error")) next
 		beta2[[v]] <- aux$beta[-1]
 		index2[[v]] <- indexes.beta[beta2[[v]]!=0]
@@ -84,8 +86,8 @@ for (v in 1:num.vn) {
 		ss <- 0
 		for (s in 1:num.knn) {
 			if (is.null(lambda.seq)) aux <- try(cv.grpreg(lambda.min=lambda.min, nlambda=nlambda, X=as.matrix(XX[,,s]), y=yy[,s], group=group, penalty=penalty, 
-														  nfolds=nfolds,max.iter=max.iter, seed=seed), silent=FALSE)
-			else aux <-try(cv.grpreg(lambda=lambda.seq, X=as.matrix(XX[,,s]), y=yy[,s], group=group, penalty=penalty, nfolds=nfolds, max.iter=max.iter, seed=seed), silent=FALSE)
+														  nfolds=nfolds,max.iter=max.iter, seed=seed), silent=TRUE)
+			else aux <-try(cv.grpreg(lambda=lambda.seq, X=as.matrix(XX[,,s]), y=yy[,s], group=group, penalty=penalty, nfolds=nfolds, max.iter=max.iter, seed=seed), silent=TRUE)
 
 			if (inherits(aux,"try-error")) {
 				lambda.s[s] <- NaN
@@ -107,7 +109,7 @@ for (v in 1:num.vn) {
 		lambda2[v] <- lambda.s[s.opt]
 		knn2[v] <- knearest[s.opt]
 		IC2[v] <- IC.s[s.opt]
-		aux <- try(grpreg(X=as.matrix(XX[,,s.opt]), y=yy[,s.opt], group=group, lambda=lambda2[v], penalty=penalty, max.iter=max.iter), silent=FALSE)
+		aux <- try(grpreg(X=as.matrix(XX[,,s.opt]), y=yy[,s.opt], group=group, lambda=lambda2[v], penalty=penalty, max.iter=max.iter), silent=TRUE)
 		if (inherits(aux,"try-error")) next
 		beta2[[v]] <- aux$beta[-1]
 		index2[[v]] <-indexes.beta[beta2[[v]]!=0]
@@ -121,8 +123,8 @@ res<-y-yhp
 call<-match.call()
 cat("\n")
 out<-list(fitted.values=yhp,residuals=res,beta.est=beta2[[ind.vn]],indexes.beta.nonnull=index2[[ind.vn]],k.opt=knn2[ind.vn], 
-		  lambda.opt=lambda2[ind.vn],IC=IC2[ind.vn],posicion.lambda.mean.dt=posicion.lambda.mean.dt,
-		  call=call,y=y,x=x,z=z,vn.opt=vn.opt,
+		  lambda.opt=lambda2[ind.vn],IC=IC2[ind.vn],
+		  call=call,y=y,x=x,z=z,vn.opt=vn.opt,lambda.opt.k=lambdas,
 		  kind.of.kernel=kind.of.kernel,range.grid=range.grid,nknot=nknot,max.iter=max.iter,
 		  semimetric=semimetric,q=q,
 		  penalty=penalty, criterion=criterion,

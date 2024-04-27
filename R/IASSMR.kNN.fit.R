@@ -1,12 +1,12 @@
 IASSMR.kNN.fit<- function(x, z, y, train.1=NULL, train.2=NULL, 
-seed.coeff=c(-1,0,1), order.Bspline=3,  nknot.theta=3, t0=NULL, 
+seed.coeff=c(-1,0,1), order.Bspline=3,  nknot.theta=3,  
 knearest=NULL, min.knn=2, max.knn=NULL, step=NULL,
 range.grid=NULL, kind.of.kernel="quad", nknot=NULL,
 lambda.min=NULL, lambda.min.h=NULL, lambda.min.l=NULL, factor.pn=1,
 nlambda=100, vn=ncol(z), nfolds=10, seed=123, wn=c(10,15,20),
-criterion=c("GCV", "BIC", "AIC", "k-fold-CV"),
-penalty=c("grLasso", "grMCP", "grSCAD", "gel", "cMCP", "gBridge", "gLasso", "gMCP"), 
-max.iter=1000)
+criterion="GCV",
+penalty="grSCAD", 
+max.iter=1000,n.core=NULL)
 {
 if (!is.matrix(z)) z <- as.matrix(z)
 if (!is.matrix(x)) x <- as.matrix(x)
@@ -23,25 +23,25 @@ indexes.beta <- 1:pn
 p<-ncol(x)
 if (is.null(nknot))  nknot <- (p - 0 - order.Bspline - 1)%/%2 
 if (is.null(range.grid)) range.grid <- c(1,p)
-if (is.null(t0)) t0 <- mean(range.grid)
-index01 <- list()
-index1 <- list()
+t0 <- mean(range.grid)
+index01 <- vector("list",length=num.wn)
+index1 <- vector("list",length=num.wn)
 lambda1 <- 0
 knn1 <- 0
-beta1 <- list()
-theta1 <- list()
+beta1 <- vector("list",length=num.wn)
+theta1 <- vector("list",length=num.wn)
 IC1 <- rep(Inf, length=num.wn)
 vn1<-numeric(num.wn)
-index2 <- list()
+index2 <- vector("list",length=num.wn)
 lambda2 <- 0
 knn2 <- 0
-beta2 <- list()
-theta2 <- list()
+beta2 <- vector("list",length=num.wn)
+theta2 <- vector("list",length=num.wn)
 IC2 <- rep(Inf, length=num.wn)
 vn2<-numeric(num.wn)
-indexes.beta.nonnull2 <- list()
+indexes.beta.nonnull2 <- vector("list",length=num.wn)
 for (w in 1:num.wn) {
-	cat("wn=", wn[w])
+	message("wn=", wn[w], ": ", w, "/", num.wn)
 	num.veci <- trunc(pn/wn[w])
 	aux <- pn - wn[w]*num.veci
 	group <- 0
@@ -60,13 +60,13 @@ for (w in 1:num.wn) {
 	index.1 <- index.1[-1]
 	index01[[w]] <- index.1
 	step.1 <- sfplsim.kNN.fit(x=x[train.1,], z=z[train.1,index.1], y=y[train.1],  
-							  seed.coeff=seed.coeff, order.Bspline=order.Bspline, nknot=nknot, nknot.theta=nknot.theta, t0=t0, 
+							  seed.coeff=seed.coeff, order.Bspline=order.Bspline, nknot=nknot, nknot.theta=nknot.theta,  
 							  lambda.min=lambda.min, lambda.min.h=lambda.min.pn.high, lambda.min.l=lambda.min.pn.low, factor.pn=factor.pn,
 							  nlambda=nlambda, vn=vn, nfolds=nfolds, seed=seed, 
 							  knearest=knearest, min.knn=min.knn, max.knn=max.knn, step=step,
 							  range.grid=range.grid, kind.of.kernel=kind.of.kernel,
 							  criterion=criterion, penalty=penalty, 
-							  max.iter=max.iter)
+							  max.iter=max.iter,n.core=n.core)
 	beta <- step.1$beta.est
 	index.X.pen <- step.1$indexes.beta.nonnull
 	beta1[[w]] <- beta
@@ -92,22 +92,22 @@ for (w in 1:num.wn) {
 	index.2 <- index.2[-1]
 	index2[[w]] <- index.2
 	step.2 <- sfplsim.kNN.fit(x=x[train.2,], z=z[train.2,index.2], y=y[train.2],  
-							  seed.coeff=seed.coeff, order.Bspline=order.Bspline, nknot=nknot, nknot.theta=nknot.theta, t0=t0, 
+							  seed.coeff=seed.coeff, order.Bspline=order.Bspline, nknot=nknot, nknot.theta=nknot.theta,  
 							  lambda.min=lambda.min, lambda.min.h=lambda.min.pn.high, lambda.min.l=lambda.min.pn.low, factor.pn=factor.pn,
 							  nlambda=nlambda, vn=vn, nfolds=nfolds, seed=seed, 
 							  knearest=knearest, min.knn=min.knn, max.knn=max.knn, step=step,
 							  range.grid=range.grid, kind.of.kernel=kind.of.kernel,
 							  criterion=criterion,penalty=penalty, 
-							  max.iter=max.iter)
+							  max.iter=max.iter,n.core=n.core)
 	beta2[[w]] <- step.2$beta.est
 	theta2[[w]] <- step.2$theta.est
 	indexes.beta.nonnull2[[w]] <- indexes.beta[index.2][step.2$indexes.beta.nonnull]
 	lambda2[w] <- step.2$lambda.opt
 	knn2[w] <- step.2$k.opt
 	IC2[w] <- step.2$IC
-      vn2[w]<-step.2$vn.opt				
+    vn2[w]<-step.2$vn.opt				
 } 
-index.w.opt<- order(IC2)[1]
+index.w.opt<- which.min(IC2)
 beta.red<-beta2[[index.w.opt]]
 w.opt<-wn[index.w.opt]
 theta.est<-theta2[[index.w.opt]]

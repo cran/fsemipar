@@ -83,7 +83,7 @@ else{
 		}
 	}
 	if (option==2) {
-		aux2 <-fsim.kernel.fit.fixedtheta(y=y.new,x=object$x, theta=object$theta.est, kind.of.kernel=object$kind.of.kernel,min.quantile.h=object$min.quantile.h,
+		aux2 <-fsim.kernel.fit.fixedtheta.com(y=y.new,x=object$x, theta=object$theta.est, kind.of.kernel=object$kind.of.kernel,min.quantile.h=object$min.quantile.h,
 				max.quantile.h=object$max.quantile.h, h.seq=object$h.seq,num.h=object$num.h, range.grid=object$range.grid, order.Bspline=object$order.Bspline, 
 				nknot=object$nknot,nknot.theta=object$nknot.theta)
 		h.opt.2 <- aux2$h.opt
@@ -102,7 +102,7 @@ else{
 	}
 	if ((option==3) & (length(object$indexes.beta.nonnull) != 0)) {
 		aux <- sfplsim.kernel.fit(x=object$x, z=object$z[,object$indexes.beta.nonnull], y=object$y,seed.coeff=object$seed.coeff, order.Bspline=object$order.Bspline,
-					nknot=object$nknot, nknot.theta=object$nknot.theta, t0=object$t0,lambda.seq=0, nfolds=object$nfolds, seed=object$seed, min.q.h=object$min.quantile.h,
+					nknot=object$nknot, nknot.theta=object$nknot.theta,lambda.seq=0, nfolds=object$nfolds, seed=object$seed, min.q.h=object$min.quantile.h,
 					max.q.h=object$max.quantile.h, h.seq=object$h.seq, num.h=object$num.h, range.grid=object$range.grid,kind.of.kernel=object$kind.of.kernel, 
 					criterion=object$criterion, penalty=object$penalty, max.iter=object$max.iter)
 		if(is.null(y.test)){
@@ -112,7 +112,7 @@ else{
 		else{
 			MSEP3a<- predict(aux,newdata.x=x.test,newdata.z=z.test[,object$indexes.beta.nonnull],y.test=y.test,option=1)
 			MSEP3b<- predict(aux,newdata.x=x.test,newdata.z=z.test[,object$indexes.beta.nonnull],y.test=y.test,option=2)    
-			out<-list(y3a=MSEP3a$y,y3b=MSEP3b$y, MSEP3a$MSEP.1, MSEP3b$MSEP.2)
+			out<-list(y3a=MSEP3a$y,y3b=MSEP3b$y, MSEP3a=MSEP3a$MSEP.1,MSEP3b=MSEP3b$MSEP.2)
 		}		 
 	}
 }  
@@ -120,28 +120,64 @@ out
 }
 
 
-plot.IASSMR.kernel<-function(x,cex.axis=1.5,cex.lab=1.5,cex=2,col=1,cex.main=1.5,...)
+plot.IASSMR.kernel<-function(x,ind=1:10,size=15,col1=1,col2=2,col3=4,option=0,...)
 {
-oldpar <- par(no.readonly = TRUE)    
-on.exit(par(oldpar))
-par(mfrow=c(1,3))
-plot(x$fitted.values,x$y,xlab="Fitted values", ylab="y",cex.lab=cex.lab,cex.axis=cex.axis,cex=cex,col=col,cex.main=cex.main,main="Response vs fitted values")
-mod<-lm(x$y~x$fitted.values)
-abline(mod, col=2,lwd=2)
-plot(x$fitted.values,x$residuals,xlab="Fitted values", ylab="Residuals",cex.lab=cex.lab,cex.axis=cex.axis,cex=cex,cex.main=cex.main,col=col,main="Residuals vs fitted values")
-abline(h=0,lty=2)
-THETA<-x$theta.est
 a<-x$range.grid[1]
 b<-x$range.grid[2]
+long_data <- as.data.frame(t(x$z[ind, ]))
+Wavelength = seq(a, b, length.out = nrow(long_data))
+long_data <- cbind(Wavelength, long_data)
+long_data <- gather(long_data, key = "Series", value = "Value", -Wavelength)
+matplot_colors <- 1:10
+impact_points <- Wavelength[x$indexes.beta.nonnull]
+g1=ggplot(long_data, aes(x = Wavelength, y = Value, group = Series, color = Series)) +
+  geom_line(linewidth = 1) +
+  scale_color_manual(values = rep(matplot_colors, length.out = length(unique(long_data$Series)))) +
+  geom_vline(xintercept = impact_points, color = 1, linetype = "dashed",linewidth=1) +  
+  theme_bw() +
+  labs(x = "t", y = "", title = expression(paste(zeta[i],"(t)"))) +
+  theme(plot.title = element_text(hjust = 0.5,size=size),axis.title.x=element_text(size=size),legend.position = "none")  
+THETA<-x$theta.est
 nknot.theta<-x$nknot.theta
 order.Bspline<-x$order.Bspline
-nm<-length(x$x[1,])
-x.t <- seq(a, b, length=nm)
+x.t <- seq(a, b, length=ncol(x$x))
 Knot.theta<-seq(a, b, length = nknot.theta + 2)[ - c(1, nknot.theta + 2)]
 delta.theta<-sort(c(rep(c(a, b),order.Bspline), Knot.theta))
 Bspline.theta<-splineDesign(delta.theta,x.t,order.Bspline)
 theta.rec<-Bspline.theta%*%THETA 
-plot(x.t,theta.rec,type="l",xlim=c(a,b),ylab="", xlab="range.grid X",cex.main=cex.main,main=expression(widehat(theta)[0]),lwd=2,cex.lab=cex.lab,cex.axis=cex.axis,col=col)
+theta_df <- data.frame(x.t, theta.rec)
+g2<-ggplot(theta_df, aes(x = x.t, y = theta.rec)) +
+  geom_line(linewidth = 1.5, color = col1) +
+  labs(x = "range.grid X", y = "", title = expression(widehat(theta)[0])) +
+  theme_bw()+
+  theme(plot.title = element_text(hjust = 0.5,size=size),axis.title.x=element_text(size=size))
+fit<-fitted(x)
+mod <- lm(x$y ~ fit)
+res <- residuals(mod)
+y<-x$y
+x_df <- data.frame(fit, y)
+g3<-ggplot(x_df, aes(x = fit, y = y)) +
+  geom_point(colour = col1,shape=1, size=5) + 
+  geom_smooth(method=lm,formula=y~x,colour =col2,  linewidth = 1.5) +
+  labs(x = "Fitted values", y = "y", title = "Response vs Fitted values") +
+  theme_bw()+
+  theme(plot.title = element_text(hjust = 0.5,size=size),axis.title.x=element_text(size=size))
+x_df2 <- data.frame(fit, res)
+g4<-ggplot(x_df2, aes(x = fit, y = res)) +
+  geom_point(colour = col1,shape=1,size=5) + 
+  geom_hline(yintercept = 0, linetype = "dashed", colour = 1, linewidth = 1) +
+  geom_smooth(method=loess,formula=y~x,linewidth=1.5,col=col3)+
+  labs(x = "Fitted values", y = "Residuals", title = "Residuals vs Fitted Values") +
+  theme_bw()+
+  theme(plot.title = element_text(hjust = 0.5,size=size),axis.title.x=element_text(size=size))
+if(option==0){
+grid.arrange(g1,g2,g3,g4,ncol =2,nrow=2)}
+if(option==1){
+grid.arrange(g1,ncol=1)}
+if(option==2){
+grid.arrange(g2,ncol=1)}
+if(option==3){
+grid.arrange(g3,g4,ncol=2)}
 }
 
 

@@ -5,15 +5,15 @@
 Sugar data
 }
 \description{
-Ash content and absorbance spectra at two different excitation wavelengths of 268 samples of sugar. Detailed information about this dataset can be found in \url{https://ucphchemometrics.com/datasets/}.
+Ash content and absorbance spectra at two different excitation wavelengths of 268 sugar samples. Detailed information about this dataset can be found at \url{https://ucphchemometrics.com/datasets/}.
 }
 \usage{data(Sugar)}
 \format{
   A \code{list} containing:
  \itemize{
- \item{\code{ash}: A vector with the ash contents.}
- \item{\code{wave.290}: A matrix containing the absorbance spectra observed on 571 equally spaced wavelengths in the range 275-560 nm at excitation wavelengths 290 nm.}
- \item{\code{wave.240}: A matrix containing the absorbance spectra observed on 571 equally spaced wavelengths in the range 275-560 nm at excitation wavelengths 240 nm.}
+ \item{\code{ash}: A vector with the ash content.}
+ \item{\code{wave.290}: A matrix containing the absorbance spectra observed at 571 equally spaced wavelengths in the range of 275-560nm, at an excitation wavelengths of 290nm.}
+ \item{\code{wave.240}: A matrix containing the absorbance spectra observed at 571 equally spaced wavelengths in the range of 275-560nm, at an excitation wavelengths of 240nm.}
  }
 }
 

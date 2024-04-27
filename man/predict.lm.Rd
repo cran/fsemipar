@@ -2,13 +2,13 @@
 \alias{predict.PVS}
 \alias{predict.lm.pels}
 \title{
-Prediction from linear model estimates
+Prediction for linear models
 }
 \description{
 \code{predict} method for: 
 \itemize{
 \item Linear model (LM) fitted using \code{lm.pels.fit}. 
-\item Linear model with covariates coming from the discretization of a curve fitted using \code{PVS.fit}.
+\item Linear model with covariates derived from the discretization of a curve fitted using \code{PVS.fit}.
 }
 }
 \usage{
@@ -20,7 +20,7 @@ Prediction from linear model estimates
 Output of the \code{lm.pels.fit} or \code{PVS.fit} functions (i.e. an object of the class \code{lm.pels} or \code{PVS})
 }
   \item{newdata}{
-Matrix containing the new observations of the scalar covariates (LM) or of the scalar covariates coming from the discretisation  of a curve, collected by row.
+Matrix containing the new observations of the scalar covariates (LM), or the scalar covariates resulting from the discretisation of a curve. Observations are collected by row.
 }
   \item{y.test}{
 (optional) A vector containing the new observations of the response.
@@ -31,7 +31,7 @@ Matrix containing the new observations of the scalar covariates (LM) or of the s
 
 \value{
 The function returns the predicted values of the response (\code{y}) for \code{newdata}. If \code{!is.null(y.test)}, it also provides the mean squared error of prediction (\code{MSEP}) computed as \code{mean((y-y.test)^2)}.
-If \code{is.null(newdata)} the function returns the fitted values.
+If \code{is.null(newdata)}, then the function returns the fitted values.
 }
 
 \author{
@@ -57,8 +57,8 @@ train<-1:160
 test<-161:215
 
 #LM fit. 
-fit<-lm.pels.fit(z=z.com[train,], y=y[train],lambda.min.h=0.02,lambda.min.l=0.01,
-      factor.pn=2, max.iter=5000, criterion="BIC", penalty="grSCAD")
+fit<-lm.pels.fit(z=z.com[train,], y=y[train],lambda.min.l=0.01,
+      factor.pn=2, max.iter=5000, criterion="BIC")
 
 #Predictions
 predict(fit,newdata=z.com[test,],y.test=y[test])
@@ -84,7 +84,7 @@ test<-217:266
 
 #Fit
 fit.pvs<-PVS.fit(z=z.sug[train,], y=y.sug[train],train.1=1:108,train.2=109:216,
-          lambda.min.h=0.2,criterion="BIC", penalty="grSCAD", max.iter=5000)
+          lambda.min.h=0.2,criterion="BIC", max.iter=5000)
 
 
 #Predictions

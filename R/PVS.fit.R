@@ -1,8 +1,8 @@
-PVS.fit<- function(z, y, train.1, train.2,  
+PVS.fit<- function(z, y, train.1=NULL, train.2=NULL,  
 lambda.min=NULL, lambda.min.h=NULL, lambda.min.l=NULL, factor.pn=1,
 nlambda=100, vn=ncol(z), nfolds=10, seed=123,wn=c(10,15,20),range.grid=NULL,
-criterion=c("GCV", "BIC", "AIC", "k-fold-CV"), 
-penalty=c("grLasso", "grMCP", "grSCAD", "gel", "cMCP", "gBridge", "gLasso", "gMCP"), 
+criterion="GCV", 
+penalty="grSCAD", 
 max.iter=1000)
 {
 if (!is.matrix(z)) z<- as.matrix(z)
@@ -31,7 +31,7 @@ IC2 <- rep(Inf, length=num.wn)
 vn2<-numeric(num.wn)
 indexes.beta.nonnull2 <- list()
 for (w in 1:num.wn) {
-	message(w, "/", num.wn)
+	message("wn=", wn[w], ": ", w, "/", num.wn)
 	num.veci <- trunc(pn/wn[w])
 	aux <- pn - wn[w]*num.veci
 	group <- 0

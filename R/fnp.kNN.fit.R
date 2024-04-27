@@ -86,7 +86,7 @@ for(m in start.order:end.order) {
 		yind <- y[ind.curves1,]
 		if (length.curve.y==1)  {                       
 			Ymat <- matrix(rep(yind, kmax), nrow = kmax, byrow = T)
-			yhat1 <- apply(Ymat[k.seq,  ] * Kmat[k.seq,  ], 1, sum)/apply(Kmat[k.seq,  ], 1, sum)
+			yhat1 <- rowSums(Ymat[k.seq,  ] * Kmat[k.seq,  ])/rowSums(Kmat[k.seq,  ])
 			resid.kseq.2 <- (yhat1- y[i])^2
 			cv.kseq <- cv.kseq + resid.kseq.2  
 		}
@@ -100,7 +100,7 @@ for(m in start.order:end.order) {
 		}                  
 	} 
 	cv.kseq <- cv.kseq/(n*length.curve.y)
-	index <- order(cv.kseq)[1]
+	index <- which.min(cv.kseq)
 	k.opt.m <- k.seq[index]
 	k.vec[m + 1 - start.order] <- k.opt.m
 	CV.app[m + 1 - start.order] <- cv.kseq[index]

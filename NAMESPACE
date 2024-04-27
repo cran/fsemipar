@@ -1,8 +1,10 @@
 export("FASSMR.kernel.fit",
        "FASSMR.kNN.fit",
        "fsim.kernel.fit", 
+       "fsim.kernel.fit.optim",
        "fsim.kernel.test", 
        "fsim.kNN.fit",
+       "fsim.kNN.fit.optim",
        "fsim.kNN.test", 
        "IASSMR.kernel.fit", 
        "IASSMR.kNN.fit",
@@ -73,10 +75,16 @@ export("FASSMR.kernel.fit",
        "summary.sfplsim.kernel", 
        "summary.sfplsim.kNN")
 
-import(splines,gtools,grpreg,DiceKriging)
-importFrom("graphics", "abline", "lines", "par")
-importFrom("stats", "fitted", "median", "quantile", "var", "lm")
-
+import(grpreg,ggplot2,parallel)
+importFrom("doParallel", "registerDoParallel")
+importFrom("DiceKriging", "SCAD")
+importFrom("splines", "splineDesign")
+importFrom("gtools", "permutations")
+importFrom("stats", "fitted", "median", "quantile", "var", "lm", "optim","residuals", "loess","predict")
+importFrom("parallelly","availableCores")
+importFrom("foreach","foreach","%dopar%")
+importFrom("gridExtra", "grid.arrange")
+importFrom("tidyr","gather")
 S3method(print, fsim.kernel)
 S3method(print, fsim.kNN)
 S3method(print, sfplsim.kernel)

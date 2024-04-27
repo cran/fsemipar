@@ -4,7 +4,7 @@
 \alias{summary.sfplsim.kernel}
 \alias{summary.sfplsim.kNN}
 \title{
-Summarize information from semi-functional partial linear single-index model (SFPLSIM) estimation methods
+Summarise information from SFPLSIM estimation 
 }
 \description{
 \code{summary} and \code{print} functions for \code{sfplsim.kNN.fit} and \code{sfplsim.kernel.fit}.
@@ -36,10 +36,10 @@ Output of the \code{sfplsim.kernel.fit} or \code{sfplsim.kNN.fit} functions (i.e
 \item{The number of non-zero components in \code{beta.est}.}
 \item{The indexes of the non-zero components in \code{beta.est}.}
 \item{The optimal value of the penalisation parameter (\code{lambda.opt}).}
-\item{The optimal value of the criterion function, i. e. the value  obtained with \code{lambda.opt}, \code{vn.opt}  and \code{h.opt}/\code{k.opt}}
-\item{Minimum value of the penalized profile least-squares function. That is, the value obtained using \code{theta.est} and \code{beta.est}.}
+\item{The optimal value of the criterion function, i.e. the value  obtained with \code{lambda.opt}, \code{vn.opt}  and \code{h.opt}/\code{k.opt}}
+\item{Minimum value of the penalised least-squares function. That is, the value obtained using \code{theta.est}, \code{beta.est} and \code{lambda.opt}.}
 \item{The penalty function used.}
-\item{The criterion used to select the tunning parameter, the penalisation parameter and \code{vn}.}
+\item{The criterion used to select the tuning parameter, the penalisation parameter and \code{vn}.}
 \item{The optimal value of \code{vn}.}
 
 }

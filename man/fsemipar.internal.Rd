@@ -4,10 +4,8 @@
 Package fsemipar internal functions
 }
 \description{
-List of the internal functions. The construction of this code is based on that by F. Ferraty, which is available on his website \url{https://www.math.univ-toulouse.fr/~ferraty/SOFTWARES/NPFDA/index.html}. 
+The package includes the following internal functions, based on the code by F. Ferraty, which is available on his website at \url{https://www.math.univ-toulouse.fr/~ferraty/SOFTWARES/NPFDA/index.html}. 
 }
-
-
 
 \details{
 \itemize{
@@ -33,7 +31,6 @@ List of the internal functions. The construction of this code is based on that b
 \item\code{H.fsim.kernel}
 \item\code{H.fsim.kNN}
 \item\code{interp.spline.deriv}
-\item\code{normaliza}
 \item\code{quad}
 \item\code{semimetric.deriv}
 \item\code{semimetric.interv}

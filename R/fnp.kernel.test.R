@@ -32,7 +32,7 @@ for(j in 1:J) {
 	res.kernel.mat <- matrix(rep(res.kernel, length.curve.y), n, length.curve.y, byrow=FALSE)
 	sum.res.kernel <- sum(res.kernel)
 	if(sum.res.kernel > 0) {
-		if (length.curve.y>1)  y.hat2[j,] <- apply(y * res.kernel.mat,2,sum)/sum.res.kernel
+		if (length.curve.y>1)  y.hat2[j,] <- colSums(y * res.kernel.mat)/sum.res.kernel
 		else  y.hat2[j,] <- sum(y * res.kernel)/sum.res.kernel
 	}
 	else y.hat2[j,] <- y[order(norm.diff)[1],]

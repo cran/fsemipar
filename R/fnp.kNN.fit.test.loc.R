@@ -75,7 +75,7 @@ for(m in start.order:end.order) {
 		ind.curves1 <- norm.order[2:(kmax + 1)]
 		yind <- y[ind.curves1]
 		Ymat <- matrix(rep(yind, kmax), nrow = kmax, byrow = T)
-		yhat1 <- apply(Ymat[k.seq,  ] * Kmat[k.seq,  ], 1, sum)/apply(Kmat[k.seq,  ], 1, sum)
+		yhat1 <- rowSums(Ymat[k.seq,  ] * Kmat[k.seq,  ])/rowSums(Kmat[k.seq,  ])
 		criterium <- abs(yhat1 - y[i])
 		index <- order(criterium)[1]
 		estimate <- yhat1[index]

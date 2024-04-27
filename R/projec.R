@@ -38,7 +38,7 @@ theta.x1<-matrix(0,nrow=length(Theta.coef),ncol=ncol(coef.mat1))
 for(i in 1:ncol(coef.mat1)){
 	theta.x1[,i]=coef.mat1[,i]*Theta.coef
 }
-coef <-t(H%*%theta.x1);coef
-projec<-apply(coef,1,sum)
+coef <-t(H%*%theta.x1)
+projec<-rowSums(coef)
 projec
 }

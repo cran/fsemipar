@@ -17,61 +17,60 @@
 
 
 \title{
-Plot outputs from regression estimation methods
+Graphical representation of regression model outputs
 }
 \description{
-\code{plot} function for \code{FASSMR.kernel.fit}, \code{FASSMR.kNN.fit},  \code{fsim.kernel.fit}, \code{fsim.kNN.fit}, \code{IASSMR.kernel.fit}, \code{IASSMR.kNN.fit}, \code{lm.pels.fit}, \code{PVS.fit}, \code{PVS.kernel.fit}, \code{PVS.kNN.fit}, \code{sfpl.kernel.fit}, \code{sfpl.kNN.fit},\code{sfplsim.kernel.fit} and \code{sfplsim.kNN.fit}.
+\code{plot} functions to generate visual representations for the outputs of several fitting functions:  \code{FASSMR.kernel.fit}, \code{FASSMR.kNN.fit},  \code{fsim.kernel.fit},  \code{fsim.kernel.fit.optim}, \code{fsim.kNN.fit}, \code{fsim.kNN.fit.optim}, \code{IASSMR.kernel.fit}, \code{IASSMR.kNN.fit}, \code{lm.pels.fit}, \code{PVS.fit}, \code{PVS.kernel.fit}, \code{PVS.kNN.fit}, \code{sfpl.kernel.fit}, \code{sfpl.kNN.fit},\code{sfplsim.kernel.fit} and \code{sfplsim.kNN.fit}.
 }
 \usage{
-\method{plot}{FASSMR.kernel}(x, cex.axis = 1.5, cex.lab = 1.5, cex = 2, col = 1, cex.main = 1.5, \dots)
+\method{plot}{FASSMR.kernel}(x,ind=1:10, size=15,col1=1,col2=2,col3=4,option=0,\dots)
 
-\method{plot}{FASSMR.kNN}(x, cex.axis = 1.5, cex.lab = 1.5, cex = 2, col = 1, cex.main = 1.5, \dots)
+\method{plot}{FASSMR.kNN}(x,ind=1:10, size=15,col1=1,col2=2,col3=4,option=0, \dots)
 
-\method{plot}{fsim.kernel}(x, cex.axis = 1.5, cex.lab = 1.5, cex = 2, col = 1, cex.main = 1.5, \dots)
+\method{plot}{fsim.kernel}(x,size=15,col1=1,col2=2, \dots)
 
-\method{plot}{fsim.kNN}(x, cex.axis = 1.5, cex.lab = 1.5, cex = 2, col = 1, cex.main = 1.5, \dots)
+\method{plot}{fsim.kNN}(x,size=15,col1=1,col2=2,\dots)
 
-\method{plot}{IASSMR.kernel}(x, cex.axis = 1.5, cex.lab = 1.5, cex = 2, col = 1, cex.main = 1.5, \dots)
+\method{plot}{IASSMR.kernel}(x,ind=1:10, size=15,col1=1,col2=2,col3=4,option=0, \dots)
 
-\method{plot}{IASSMR.kNN}(x, cex.axis = 1.5, cex.lab = 1.5, cex = 2, col = 1, cex.main = 1.5, \dots)
+\method{plot}{IASSMR.kNN}(x,ind=1:10, size=15,col1=1,col2=2,col3=4,option=0, \dots)
 
-\method{plot}{lm.pels}(x, cex.axis = 1.5, cex.lab = 1.5, cex = 2, col = 1, cex.main = 1.5, \dots)
+\method{plot}{lm.pels}(x,size=15,col1=1,col2=2,col3=4, \dots)
 
-\method{plot}{PVS}(x, cex.axis = 1.5, cex.lab = 1.5, cex = 2, col = 1, cex.main = 1.5, \dots)
+\method{plot}{PVS}(x,ind=1:10, size=15,col1=1,col2=2,col3=4,option=0, \dots)
 
-\method{plot}{PVS.kernel}(x, cex.axis = 1.5, cex.lab = 1.5, cex = 2, col = 1, cex.main = 1.5, \dots)
+\method{plot}{PVS.kernel}(x,ind=1:10, size=15,col1=1,col2=2,col3=4,option=0, \dots)
 
-\method{plot}{PVS.kNN}(x, cex.axis = 1.5, cex.lab = 1.5, cex = 2, col = 1, cex.main = 1.5, \dots)
+\method{plot}{PVS.kNN}(x,ind=1:10, size=15,col1=1,col2=2,col3=4,option=0, \dots)
 
-\method{plot}{sfpl.kernel}(x, cex.axis = 1.5, cex.lab = 1.5, cex = 2, col = 1, cex.main = 1.5, \dots)
+\method{plot}{sfpl.kernel}(x,size=15,col1=1,col2=2,col3=4, \dots)
 
-\method{plot}{sfpl.kNN}(x, cex.axis = 1.5, cex.lab = 1.5, cex = 2, col = 1, cex.main = 1.5, \dots)
+\method{plot}{sfpl.kNN}(x,size=15,col1=1,col2=2,col3=4, \dots)
 
-\method{plot}{sfplsim.kernel}(x, cex.axis = 1.5, cex.lab = 1.5, cex = 2, col = 1, cex.main = 1.5, \dots)
+\method{plot}{sfplsim.kernel}(x,size=15,col1=1,col2=2,col3=4, \dots)
 
-\method{plot}{sfplsim.kNN}(x, cex.axis = 1.5, cex.lab = 1.5, cex = 2, col = 1, cex.main = 1.5, \dots)
+\method{plot}{sfplsim.kNN}(x,size=15,col1=1,col2=2,col3=4, \dots)
 }
 
 \arguments{
   \item{x}{
 Output of the functions mentioned in the \code{Description} (i.e. an object of the class \code{FASSMR.kernel}, \code{FASSMR.kNN}, \code{fsim.kernel},\code{fsim.kNN}, \code{IASSMR.kernel}, \code{IASSMR.kNN}, \code{lm.pels}, \code{PVS}, \code{PVS.kernel}, \code{PVS.kNN}, \code{sfpl.kernel},\code{sfpl.kNN}, \code{sfplsim.kernel} or \code{sfplsim.kNN}).
 }
-  \item{cex.axis}{
-The magnification to be used for axis annotation relative to the current setting of \code{cex}. The default is 1.5.
+\item{ind}{Indexes of the colors for the curves in the chart of estimated impact points. The default is \code{1:10}}
+\item{size}{
+The size for title and axis labels in pts. The default is 15.
 }
-  \item{cex.lab}{
-The magnification to be used for x and y labels relative to the current setting of \code{cex}. The default is 1.5.
+  \item{col1}{
+Color of the points in the charts. Also, color of the estimated functional index representation. The default is black.
 }
-  \item{cex}{
-A numerical value giving the amount by which plotting text and symbols should be magnified. The default is 2.
+  \item{col2}{
+Color of the nonparametric fit representation in FSIM functions, and of the straight line in 'Response vs Fitted Values' charts. The default is red.
 }
-  \item{col}{
-A specification for the default plotting color. The default is \code{color=1}.
+  \item{col3}{
+Color of the nonparametric fit of the residuals in 'Residuals vs Fitted Values' charts. The default is blue.
 }
-  \item{cex.main}{
-The magnification to be used for main titles relative to the current setting of \code{cex}. The default is 1.5.
-}
-  \item{\dots}{Further arguments passed to or from other methods.
+\item{option}{Selection of charts to be plotted. The default, \code{option = 0}, means all charts are plotted. See the section \code{Details}.}
+\item{\dots}{Further arguments passed to or from other methods.
 
 }
 }
@@ -84,20 +83,41 @@ The functions return different graphical representations.
      \item The estimated functional index: \eqn{\hat{\theta}}.
      \item The regression fit.
      }
-
-\item For the classes \code{FASSMR.kernel}, \code{FASSMR.kNN}, \code{IASSMR.kernel}, \code{IASSMR.kNN}, \code{sfplsim.kernel} and \code{sfplsim.kNN}.
-\enumerate{
-     \item The response over the \code{fitted.values}.
-      \item The \code{residuals} over the \code{fitted.values}.
-     \item The estimated functional index: \eqn{\hat{\theta}}.
-     }
-
-\item For the classes \code{lm.pels}, \code{PVS}, \code{PVS.kernel}, \code{PVS.kNN}, \code{sfpl.kernel} and \code{sfpl.kNN}.
+\item For the classes \code{lm.pels}, \code{sfpl.kernel} and \code{sfpl.kNN}:
 \enumerate{
 \item The response over the \code{fitted.values}.
 \item The \code{residuals} over the \code{fitted.values}.
 }
+
+\item For the classes \code{sfplsim.kernel} and \code{sfplsim.kNN}:
+\enumerate{
+     \item  The estimated functional index: \eqn{\hat{\theta}}.
+     \item The response over the \code{fitted.values}.
+     \item The \code{residuals} over the \code{fitted.values}.
+ }
+\item For the classes \code{FASSMR.kernel}, \code{FASSMR.kNN}, \code{IASSMR.kernel}, \code{IASSMR.kNN}, \code{sfplsim.kernel} and \code{sfplsim.kNN}:
+\enumerate{
+    \item If \code{option=1}: The curves with the estimated impact points (in dashed vertical lines).
+     \item If \code{option=2}: The estimated functional index: \eqn{\hat{\theta}}.
+     \item If \code{option=3}:
+     \itemize{
+     \item The response over the \code{fitted.values}.
+     \item The \code{residuals} over the \code{fitted.values}.}
+     \item If \code{option=0}: All chart are plotted.
+ }
+
+\item For the classes \code{PVS}, \code{PVS.kNN}, \code{PVS.kernel}:
+\enumerate{
+    \item If \code{option=1}: The curves with the estimated impact points (in dashed vertical lines).
+     \item If \code{option=2}: \itemize{ 
+     \item The response over the \code{fitted.values}.
+     \item The \code{residuals} over the \code{fitted.values}.}
+     \item If \code{option=0}: All chart are plotted.
+ }
 }
+All the routines implementing the plot S3 method use internally the R package \code{ggplot2} to produce elegant and high quality
+charts.
+
 }
 
 \author{

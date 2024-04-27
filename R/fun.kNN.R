@@ -55,7 +55,7 @@ for(i in 1:n2) {
 	Ind.resp <- y[Ind.curves]
 	YMAT <- matrix(rep(Ind.resp, kmax), nrow = kmax, byrow = T)
 	if (length(knearest)==1) Yhat[i,] <- sum(YMAT[knearest,] * KMAT[knearest,])/sum(KMAT[knearest,])
-	else Yhat[i,] <- apply(YMAT[knearest,] * KMAT[knearest,], 1, sum)/apply(KMAT[knearest,], 1, sum)
+	else Yhat[i,] <- rowSums(YMAT[knearest,] * KMAT[knearest,])/rowSums(KMAT[knearest,])
 }	
 list(yhat=Yhat, knn=knearest, h.seq=BANDWIDTH)
 }

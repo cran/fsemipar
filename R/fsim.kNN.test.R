@@ -23,7 +23,7 @@ for(j in 1:J) {
 	res.kernel.mat <- matrix(rep(res.kernel, length.curve.y), k, length.curve.y, byrow=FALSE)
 	sum.res.kernel <- sum(res.kernel)
 	if(sum.res.kernel > 0) {
-		if (length.curve.y>1)  y.hat2[j,] <- apply(y[ind.curves2[ - (k + 1)],] * res.kernel.mat,2,sum)/sum.res.kernel
+		if (length.curve.y>1)  y.hat2[j,] <- colSums(y[ind.curves2[ - (k + 1)],] * res.kernel.mat)/sum.res.kernel
 		else  y.hat2[j,] <- sum(y[ind.curves2[ - (k + 1)],] * res.kernel)/sum.res.kernel
 	}
 	else y.hat2[j,] <- y[ind.curves2[1],]

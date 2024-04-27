@@ -40,10 +40,10 @@ for(i in 1:n1) {
 	Ind.x <- Norm.order[2:(kmax + 1)]
 	Ind.resp <- y[Ind.x]
 	YMAT <- matrix(rep(Ind.resp, kmax), nrow = kmax, byrow = T)
-	HAT.RESP[i,] <- apply(YMAT[knearest,] * KMAT[knearest,], 1, sum)/apply(KMAT[knearest,], 1, sum)
+	HAT.RESP[i,] <- rowSums(YMAT[knearest,] * KMAT[knearest,])/rowSums(KMAT[knearest,])
 }
 CRITERIUM <- (HAT.RESP - y)^2
-Criterium <- apply(CRITERIUM, 2, sum)
+Criterium <- colSums(CRITERIUM)
 index.opt <- order(Criterium)[1]
 y.estimated <- HAT.RESP[, index.opt]
 knearest.opt <- knearest[index.opt]
@@ -61,9 +61,9 @@ if(twodatasets) {
 	KERNEL <- kernel(t(t(SEMIMETRIC2)/Bandwidth2))
 	KERNEL[KERNEL < 0] <- 0
 	KERNEL[KERNEL > 1] <- 0
-	Denom <- apply(KERNEL, 2, sum)
+	Denom <- colSums(KERNEL)
 	RESPKERNEL <- KERNEL * y
-	y.predicted <- apply(RESPKERNEL, 2, sum)/Denom
+	y.predicted <- colSums(RESPKERNEL)/Denom
 	return(list(Estimated.values = y.estimated, 	
 		predicted.values = y.predicted, Bandwidths = 
 		Bandwidth.opt, knearest.opt = knearest.opt, Mse = 

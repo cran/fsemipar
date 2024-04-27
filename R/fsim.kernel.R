@@ -60,11 +60,8 @@ out
 }
 
 
-plot.fsim.kernel<-function(x,cex.axis=1.5,cex.lab=1.5,cex=2,col=1,cex.main=1.5,...)
+plot.fsim.kernel<-function(x, size=15,col1=1, col2=2,...)
 {
-oldpar <- par(no.readonly = TRUE)    
-on.exit(par(oldpar))
-par(mfrow=c(1,2))
 THETA<-x$theta.est
 a<-x$range.grid[1]
 b<-x$range.grid[2]
@@ -75,12 +72,23 @@ Knot.theta<-seq(a, b, length = nknot.theta + 2)[ - c(1, nknot.theta + 2)]
 delta.theta<-sort(c(rep(c(a, b),order.Bspline), Knot.theta))
 Bspline.theta<-splineDesign(delta.theta,x.t,order.Bspline)
 theta.rec<-Bspline.theta%*%THETA 
-plot(x.t,theta.rec,type="l",xlim=c(a,b),ylab="", xlab="range.grid X",main=expression(widehat(theta)[0]),lwd=2,cex.axis=cex.axis, cex.lab=cex.lab, cex=cex,col=col, cex.main=cex.main)
-x.hat.theta=projec(data=x$x, theta=x$theta.est, range.grid=x$range.grid,order.Bspline=x$order.Bspline, nknot=x$nknot,nknot.theta=x$nknot.theta)
-y.hat=fitted(x)
-vec=cbind(x.hat.theta,y.hat)
-vec2=vec[order(x.hat.theta),] 
-plot(x.hat.theta,x$y,xlab=expression(paste("<",widehat(theta)[0],",","X",">")),ylab="",main="Regression fit",cex.axis=cex.axis, cex.lab=cex.lab, cex=cex,col=col, cex.main=cex.main)
-lines(vec2[,1],vec2[,2],type="l",col=2,lwd=2)
-}
+theta_df <- data.frame(x.t, theta.rec)
+g1<-ggplot(theta_df, aes(x = x.t, y = theta.rec)) +
+  geom_line(linewidth = 1.5, color = col1) +
+  labs(x = "range.grid X", y = "", title = expression(widehat(theta)[0])) +
+  theme_bw()+
+  theme(plot.title = element_text(hjust = 0.5,size=size),axis.title.x=element_text(size=size))  
+x.hat.theta <- projec(data = x$x, theta = x$theta.est, range.grid = x$range.grid, order.Bspline = x$order.Bspline, nknot = x$nknot, nknot.theta = x$nknot.theta)
+y.hat <- fitted(x)
+vec <- cbind(x.hat.theta, y.hat)
+vec2 <- vec[order(x.hat.theta),]
+regression_df <- data.frame(x.hat.theta, x$y)
+g2<-ggplot(regression_df, aes(x = x.hat.theta, y = x$y)) +
+  geom_point(color = "black",size=5,shape=1) +
+  geom_line(data = data.frame(vec2), aes(x = vec[,1], y = vec[,2]), color = col2, linewidth = 1.5) +
+  labs(x = expression(paste("<", widehat(theta)[0], ",", "X", ">")), y = "", title =expression(paste(widehat(r),"(","<", widehat(theta)[0], ",", "X", ">",")")) ) +
+  theme_bw()+
+theme(plot.title = element_text(hjust = 0.5,size=size),axis.title.x=element_text(size=size))
 
+grid.arrange(g1, g2, ncol = 2)
+}

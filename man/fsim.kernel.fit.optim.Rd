@@ -1,35 +1,33 @@
-\name{fsim.kernel.fit}
-\alias{fsim.kernel.fit}
+\name{fsim.kernel.fit.optim}
+\alias{fsim.kernel.fit.optim}
 \title{
-Functional single-index model fit using kernel estimation and joint LOOCV minimisation
+Functional single-index model fit using kernel estimation and iterative LOOCV minimisation
 }
 \description{
 This function fits a functional single-index model (FSIM) between a functional covariate and a
 scalar response. 
 It employs kernel estimation with Nadaraya-Watson weights and uses B-spline expansions to represent curves and eligible functional indexes. 
 
-The function also utilises the leave-one-out cross-validation (LOOCV) criterion to select the bandwidth (\code{h.opt}) and the coefficients of the functional index in the spline basis (\code{theta.est}). It performs a joint minimisation of the LOOCV objective function in both the bandwidth and the functional index.}
-
-\usage{
-fsim.kernel.fit(x, y, seed.coeff = c(-1, 0, 1), order.Bspline = 3, 
-nknot.theta = 3,  min.q.h = 0.05, max.q.h = 0.5, h.seq = NULL, num.h = 10, 
-kind.of.kernel = "quad", range.grid = NULL, nknot = NULL, n.core = NULL)
+The function also utilises the leave-one-out cross-validation (LOOCV) criterion to select the bandwidth (\code{h.opt}) and the coefficients of the functional index in the spline basis (\code{theta.est}). It performs an iterative minimisation of the LOOCV objective function, starting from an initial set of coefficients (\code{gamma}) for the functional index.
 }
-%- maybe also 'usage' for other objects documented here.
+\usage{
+fsim.kernel.fit.optim(x, y, nknot.theta = 3, order.Bspline = 3, gamma = NULL, 
+min.q.h = 0.05, max.q.h = 0.5, h.seq = NULL, num.h = 10,
+kind.of.kernel = "quad", range.grid = NULL, nknot = NULL, threshold = 0.005)
+}
 \arguments{
-   \item{x}{Matrix containing the observations of the functional covariate (i.e. curves) collected by row.}
+ \item{x}{Matrix containing the observations of the functional covariate (i.e. curves) collected by row.}
   
   \item{y}{Vector containing the scalar response.}
   
-  \item{seed.coeff}{
-Vector of initial values used to  build the set \eqn{\Theta_n} (see section \code{Details}). The coefficients for the B-spline representation of each eligible functional index \eqn{\theta \in \Theta_n} are obtained from \code{seed.coeff}.  The default is \code{c(-1,0,1)}.
-}
   \item{order.Bspline}{
 Positive integer giving the order of the B-spline basis functions. This is the number of coefficients in each piecewise polynomial segment. The default is 3}
 
   \item{nknot.theta}{Positive integer indicating the number of regularly spaced interior knots in the B-spline expansion of \eqn{\theta_0}. The default is 3. 
 }
-
+  \item{gamma}{
+Vector indicating the initial coefficients for the functional index used in the iterative procedure. By default, it is a vector of ones. The size of the vector is determined by the sum \code{nknot.theta+order.Bspline}.
+}
   \item{min.q.h}{Minimum quantile order of the distances between curves, which are computed using the projection semi-metric. This value determines the lower endpoint of the range from which the bandwidth is selected. The default is 0.05.
 }
   \item{max.q.h}{
@@ -39,19 +37,20 @@ Maximum quantile order of the distances between curves, which are computed using
 }
   \item{num.h}{Positive integer indicating the number of bandwidths in the grid. The default is 10.
 }
-   \item{kind.of.kernel}{
+  \item{kind.of.kernel}{
 The type of kernel function used. Currently, only Epanechnikov kernel (\code{"quad"}) is available.
 }
  \item{range.grid}{
 Vector of length 2 containing the endpoints of the grid at which the observations of the functional covariate \code{x} are evaluated (i.e. the range of the discretisation). If \code{range.grid=NULL}, then \code{range.grid=c(1,p)} is considered, where \code{p} is the discretisation size of \code{x} (i.e. \code{ncol(x))}.
 }
   \item{nknot}{
-Positive integer indicating the number of interior knots for the B-spline expansion of the functional covariate. The default value is \code{(p - order.Bspline - 1)\%/\%2}.
+Positive integer indicating the number of regularly spaced interior knots for the B-spline expansion of the functional covariate. The default value is \code{(p - order.Bspline - 1)\%/\%2}.
 }
-   \item{n.core}{
-Number of CPU cores designated for parallel execution.The default is \code{n.core<-availableCores(omit=1)}.
+  \item{threshold}{
+The convergence threshold for the LOOCV function (scaled by the variance of the response). The default is \code{5e-3}.
 }
 }
+
 \details{
 The functional single-index model (FSIM) is given by the expression:
 \deqn{Y_i=r(\langle\theta_0,X_i\rangle)+\varepsilon_i, \quad i=1,\dots,n,}
@@ -75,10 +74,10 @@ w_{n,h,\hat{\theta}}(x,X_i)=\frac{K\left(h^{-1}d_{\hat{\theta}}\left(X_i,x\right
 \item \eqn{d_{\hat{\theta}}(x_1,x_2)=|\langle\hat{\theta},x_1-x_2\rangle|} is the projection semi-metric, and \eqn{\hat{\theta}} is an estimate of \eqn{\theta_0}. 
 }
 
-The procedure requires the estimation of the function-parameter \eqn{\theta_0}. Therefore, we use B-spline expansions to represent curves (dimension \code{nknot+order.Bspline}) and eligible functional indexes (dimension \code{nknot.theta+order.Bspline}). Then, we build a set \eqn{\Theta_n} of eligible functional indexes by calibrating (to ensure the identifiability of the model) the set of initial coefficients given in \code{seed.coeff}. The larger this set is, the greater the size of \eqn{\Theta_n}. Since our approach requires intensive computation, a trade-off between the size of \eqn{\Theta_n} and the performance of the estimator is necessary. For that, Ait-Saidi et al. (2008) suggested considering \code{order.Bspline=3} and \code{seed.coeff=c(-1,0,1)}. For details on the construction of \eqn{\Theta_n}, see Novo et al. (2019).
-
-We obtain the estimated coefficients of \eqn{\theta_0} in the spline basis (\code{theta.est}) and the selected bandwidth (\code{h.opt}) by minimising the LOOCV criterion. This function performs a joint minimisation in both parameters, the bandwidth and the functional index, and supports parallel computation. To avoid parallel computation, we can set \code{n.core=1}.
+The procedure requires the estimation of the function-parameter \eqn{\theta_0}. Therefore, we use B-spline expansions to represent curves (dimension \code{nknot+order.Bspline}) and eligible functional indexes (dimension \code{nknot.theta+order.Bspline}).
+We obtain the estimated coefficients of \eqn{\theta_0} in the spline basis (\code{theta.est}) and the selected bandwidth (\code{h.opt}) by minimising the LOOCV criterion. This function performs an iterative minimisation procedure, starting from an initial set of coefficients (\code{gamma}) for the functional index. Given a functional index, the optimal bandwidth according to the LOOCV criterion is selected. For a given bandwidth, the minimisation in the functional index is performed using the R function \code{optim}. The procedure is iterated until convergence.  For details, see Ferraty et al. (2013). 
 }
+
 \value{
 \item{call}{The matched call.}
 \item{fitted.values}{Estimated scalar response.}
@@ -88,17 +87,15 @@ We obtain the estimated coefficients of \eqn{\theta_0} in the spline basis (\cod
 \item{r.squared}{Coefficient of determination.} 
 \item{var.res}{Redidual variance.}
 \item{df}{Residual degrees of freedom.}
-\item{yhat.cv}{Predicted values for the scalar response using leave-one-out samples.}
-\item{CV.opt}{Minimum value of the CV function, i.e. the value of CV for \code{theta.est} and \code{h.opt}.}
-\item{CV.values}{Vector containing CV values for each functional index in \eqn{\Theta_n} and the value of \eqn{h} that minimises the CV for such index (i.e. \code{CV.values[j]} contains the value of the CV function corresponding to \code{theta.seq.norm[j,]} and the best value of the \code{h.seq} for this functional index according to the CV criterion).}
+\item{CV.opt}{Minimum value of the LOOCV function, i.e. the value of LOOCV for \code{theta.est} and \code{h.opt}.}
+\item{err}{Value of the LOOCV function divided by \code{var(y)} for each interaction.}
 \item{H}{Hat matrix.}
-\item{m.opt}{Index of \eqn{\hat{\theta}} in the set \eqn{\Theta_n}.}
-\item{theta.seq.norm}{The vector \code{theta.seq.norm[j,]} contains the coefficientes in the B-spline basis of the jth functional index in \eqn{\Theta_n}.}
-\item{h.seq}{Sequence of eligible values for \eqn{h}.}
+\item{h.seq}{Sequence of eligible values for the bandwidth.}
+\item{CV.hseq}{CV values for each \code{h}.}
 \item{...}{}
 }
 \references{
-Ait-Saidi, A., Ferraty, F., Kassa, R., and Vieu, P. (2008) Cross-validated estimations in the single-functional index model. \emph{Statistics}, \bold{42(6)}, 475--494, \doi{https://doi.org/10.1080/02331880801980377}.
+Ferraty, F., Goia, A., Salinelli, E., and Vieu, P. (2013) Functional projection pursuit regression. \emph{Test}, \bold{22}, 293--320, \doi{https://doi.org/10.1007/s11749-012-0306-2}.
 
 Novo S., Aneiros, G., and Vieu, P., (2019) Automatic and location-adaptive estimation in functional single--index regression. \emph{Journal of Nonparametric Statistics}, \bold{31(2)}, 364--392, \doi{https://doi.org/10.1080/10485252.2019.1567726}.
 }
@@ -107,12 +104,10 @@ German Aneiros Perez \email{german.aneiros@udc.es}
 
 Silvia Novo Diaz  \email{snovo@est-econ.uc3m.es}
 }
-
-
 \seealso{
-See also \code{\link{fsim.kernel.test}}, \code{\link{predict.fsim.kernel}}, \code{\link{plot.fsim.kernel}}.
+See also \code{\link{predict.fsim.kernel}} and \code{\link{plot.fsim.kernel}}.
 
-Alternative procedure \code{\link{fsim.kNN.fit}}.
+Alternative procedures \code{\link{fsim.kNN.fit.optim}}, \code{\link{fsim.kernel.fit}} and \code{\link{fsim.kNN.fit}}.
 }
 \examples{
 \donttest{
@@ -122,12 +117,10 @@ X<-Tecator$absor.spectra2
 
 #FSIM fit.
 ptm<-proc.time()
-fit<-fsim.kernel.fit(y[1:160],x=X[1:160,],max.q.h=0.35, nknot=20,
+fit<-fsim.kernel.fit.optim(y[1:160],x=X[1:160,],max.q.h=0.35, nknot=20,
 range.grid=c(850,1050),nknot.theta=4)
 proc.time()-ptm
 fit
 names(fit)
 }
 }
-
-

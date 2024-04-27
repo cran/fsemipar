@@ -72,17 +72,28 @@ for(m in start.order:end.order) {
 	}
 	cv.hseq <- rep(0,num.h.m)
 	h.seq.app[[m + 1 - start.order]] <- h.seq.m
-	for(i in 1:n) {       			   
-		for (j in 1:num.h.m) {
-			h <- h.seq.m[j]
-			yhat1 <- fnp.kernel.test(x=x[-i,],y=y[-i],y.test=y[i], x.test=x[i,], kind.of.semimetric=kind.of.semimetric, q=m, h=h, kind.of.kernel=kind.of.kernel, range.grid=range.grid, nknot=nknot)$y.estimate.test
-			if (length.curve.y==1) resid.hseq.2 <- (yhat1- y[i])^2
-			else resid.hseq.2 <- sum((yhat1- y[i,])^2)
-			cv.hseq[j] <- cv.hseq[j] + resid.hseq.2
-			} # for (j		                 
-	} # for (i
+	#for(i in 1:n) {       			   
+		for (j in 1:num.h.m) {	
+		if (p==1) norm.diff.0 <- abs(outer(x, x, "-"))			
+		else if (kind.of.semimetric=="semimetric.deriv") norm.diff.0 <- semimetric(data1=x, data2=x, q=m, range.grid=range.grid, nknot = nknot.m)
+		else if (kind.of.semimetric=="semimetric.interv") norm.diff.0 <- semimetric(data1=x, data2=x, interv=c(ext.inf,ext.sup), range.grid=range.grid, nknot = nknot.m)					  
+		else if (kind.of.semimetric=="semimetric.pca")  norm.diff.0 <- semimetric(data1=x, data2=x, q=m)
+		h <- h.seq.m[j]
+		res.kernel<-kernel(norm.diff.0/h)
+        res.kernel[res.kernel<0] <- 0
+	    res.kernel[res.kernel>1] <- 0	
+        sum.res.kernel <-colSums(res.kernel)
+        yhat1<-res.kernel%*%y/sum.res.kernel
+		input.num<-y[apply(norm.diff.0,2,order)[2,]]
+        yhat1[is.na(yhat1)]<-input.num[is.na(yhat1)]		     
+		den<-1-kernel(0)/sum.res.kernel
+	    dif<-((y-yhat1)/den)^2	
+        dif[is.na(dif)]<-(y[is.na(dif)]-input.num[is.na(dif)])^2
+	    cv.hseq[j] <-sum(dif)
+		} # for (j		                 
+	#} # for (i
 	cv.hseq <- cv.hseq/n
-	index <- order(cv.hseq)[1]
+	index <- which.min(cv.hseq)
 	h.opt.m <- h.seq.m[index]
 	h.vec[m + 1 - start.order] <- h.opt.m
 	CV.app[m + 1 - start.order] <- cv.hseq[index]
@@ -90,7 +101,7 @@ for(m in start.order:end.order) {
 		yhat.cv[i,] <- fnp.kernel.test(x=x[-i,], y=y[-i], x.test=x[i,], y.test=y[i], kind.of.semimetric=kind.of.semimetric, q=m, h=h.opt.m, kind.of.kernel=kind.of.kernel, range.grid=range.grid, nknot=nknot)$y.estimate.test
 	estimated.Y[[m + 1 - start.order]] <- yhat.cv	 
 } 
-m.opt <- order(CV.app)[1] +  start.order - 1
+m.opt <- which.min(CV.app)+  start.order - 1
 h.opt <- h.vec[m.opt + 1 - start.order]
 h.seq.opt <- h.seq.app[[m.opt + 1 - start.order]]
 if (kind.of.semimetric=="semimetric.interv") {		
@@ -100,11 +111,11 @@ if (kind.of.semimetric=="semimetric.interv") {
 		ext.inf <- m.opt - (i-1)*(2*a+2-i)/2
 		ext.sup <- ext.inf + min.leng.interv + i -1
 	}
-	list(m.opt=m.opt, h.opt=h.opt, h.seq.opt=h.seq.opt, interv.opt=c(ext.inf, ext.sup),  y.estimate.app = estimated.Y[[order(CV.app)[1]]], y=y,
+	list(m.opt=m.opt, h.opt=h.opt, h.seq.opt=h.seq.opt, interv.opt=c(ext.inf, ext.sup),  y.estimate.app = estimated.Y[which.min(CV.app)], y=y,
 	CV=CV.app)
 } 
 	else	
-	list(m.opt=m.opt, h.opt=h.opt, h.seq.opt=h.seq.opt, y.estimate.app = estimated.Y[[order(CV.app)[1]]], y=y,
+	list(m.opt=m.opt, h.opt=h.opt, h.seq.opt=h.seq.opt, y.estimate.app = estimated.Y[[which.min(CV.app)]], y=y,
 	CV=CV.app)
 } 
 

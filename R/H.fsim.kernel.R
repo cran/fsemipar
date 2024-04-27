@@ -18,7 +18,7 @@ for(i in 1:n){
 	if(sum.res.kernel > 0) {
 		H[i,] <-res.kernel/sum.res.kernel
 	}                                                
-	else H[i,order(norm.diff)[1]] <- 1
+	else H[i,which.min(norm.diff)] <- 1
 } 
 H
 }

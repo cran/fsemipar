@@ -27,8 +27,8 @@ KERNEL1[KERNEL1 < 0] <- 0
 KERNEL1[KERNEL1 > 1] <- 0
 diag(KERNEL1) <- 0
 RESPKERNEL1 <- KERNEL1 * y
-Denom1 <- apply(KERNEL1, 2, sum)
-Response.estimated <- apply(RESPKERNEL1, 2, sum)/Denom1
+Denom1 <- colSums(KERNEL1)
+Response.estimated <- colSums(RESPKERNEL1)/Denom1
 Mse.estimated <- sum((Response.estimated - y)^2)/n1
 if(twodatasets) {
 	if(semimetric == "mplsr")
@@ -45,9 +45,9 @@ if(twodatasets) {
 	KERNEL2 <- kernel(t(t(SEMIMETRIC2)/bandwidth.knn2))
 	KERNEL2[KERNEL2 < 0] <- 0
 	KERNEL2[KERNEL2 > 1] <- 0
-	Denom2 <- apply(KERNEL2, 2, sum)
+	Denom2 <- colSums(KERNEL2)
 	RESPKERNEL2 <- KERNEL2 * y
-	Response.predicted <- apply(RESPKERNEL2, 2, sum)/Denom2
+	Response.predicted <- colSums(RESPKERNEL2)/Denom2
 	return(list(estimated.values = Response.estimated, 
 		predicted.values = Response.predicted, knn = k, 
 		mse = Mse.estimated))

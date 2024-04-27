@@ -1,11 +1,9 @@
-sfplsim.kNN.fit.fixedtheta<- function(x, z, y, theta, 
-order.Bspline=3,  nknot.theta=3,  
-knearest=NULL, min.knn=2, max.knn=NULL,step=NULL, 
-range.grid=NULL, kind.of.kernel=NULL,nknot=NULL,
+sfplsim.kNN.fit.fixedtheta<- function(x, z, y, norm.diff,  
+knearest=NULL, min.knn=2, max.knn=NULL,step=NULL, kernel,
 lambda.min=NULL, lambda.min.pn.high=NULL, lambda.min.pn.low=NULL, factor.pn=1,
 nlambda=100, lambda.seq=lambda.seq,vn=ncol(z), nfolds=10, seed=123, 
-criterion=c("GCV", "BIC", "AIC", "k-fold-CV"),  
-penalty=c("grLasso", "grMCP", "grSCAD", "gel", "cMCP", "gBridge", "gLasso", "gMCP"), 
+criterion="GCV",  
+penalty="grSCAD", 
 max.iter=1000)
 {
 if (penalty=="grSCAD") penal <- get("SCAD")
@@ -20,8 +18,6 @@ n <- nrow(z)
 pn <- ncol(z)
 indexes.beta <- 1:pn
 p <- ncol(x)
-
-if (is.null(nknot))  nknot <- (p - 0 - order.Bspline - 1)%/%2 
 if (is.null(lambda.min)) {
 	if (is.null(lambda.min.pn.high)) lambda.min.pn.high <- 0.05
 	if (is.null(lambda.min.pn.low)) lambda.min.pn.low <- 1e-4
@@ -33,7 +29,6 @@ if (is.null(knearest)) {
 	if(step == 0) step <- 1
 	knearest <- seq(from =min.knn, to = max.knn, by = step)
 }
-
 num.knn <- length(knearest)
 lambda2 <- 0
 lambda3 <- matrix(0,num.vn,3)
@@ -57,25 +52,25 @@ for (v in 1:num.vn) {
 	group <- group[-1]
 # GROUP
 	XX<- array(0,c(n,pn,num.knn))
-	yy <- y-fun.kNN.fixedtheta(y=y, x=x, pred=x, theta=theta, knearest=knearest, range.grid=range.grid, nknot=nknot, kind.of.kernel=kind.of.kernel, order.Bspline=order.Bspline, nknot.theta=nknot.theta)$yhat
-	for (j in 1:pn) XX[,j,]<- z[,j]- fun.kNN.fixedtheta(y=z[,j], x=x, pred=x, theta=theta, knearest=knearest, range.grid=range.grid, nknot=nknot, kind.of.kernel=kind.of.kernel, order.Bspline=order.Bspline, nknot.theta=nknot.theta)$yhat
+	yy <- y-fun.kNN.fixedtheta(y=y, norm.diff=norm.diff, knearest=knearest, kernel=kernel)$yhat
+	for (j in 1:pn) XX[,j,]<- z[,j]- fun.kNN.fixedtheta(y=z[,j],norm.diff=norm.diff, knearest=knearest, kernel=kernel)$yhat
 	lambda.s <- 0
 	lambda3.s <- matrix(0,num.knn,3)
 	IC.s <- 0
 	Q.s <- 0
 	if (criterion != "k-fold-CV") {
 		for (s in 1:num.knn) {
-			if (is.null(lambda.seq)) aux0 <-  try(grpreg(X=as.matrix(XX[,,s]), y=yy[,s], lambda.min=lambda.min, nlambda=nlambda, group=group, penalty=penalty, max.iter=max.iter), silent=FALSE)
-			else aux0 <-  try(grpreg(X=as.matrix(XX[,,s]), y=yy[,s], lambda=lambda.seq, group=group, penalty=penalty, max.iter=max.iter), silent=FALSE)
+			if (is.null(lambda.seq)) aux0 <-  try(grpreg(X=as.matrix(XX[,,s]), y=yy[,s], lambda.min=lambda.min, nlambda=nlambda, group=group, penalty=penalty, max.iter=max.iter), silent=TRUE)
+			else aux0 <-  try(grpreg(X=as.matrix(XX[,,s]), y=yy[,s], lambda=lambda.seq, group=group, penalty=penalty, max.iter=max.iter), silent=TRUE)
 			if (inherits(aux0,"try-error")) {
 				lambda.s[s] <- NaN
 				lambda3.s[s,] <- NaN
 				IC.s[s] <- NaN
 				next
 			}
-            	select<-grpreg::select
+            select<-grpreg::select
 			aux <- select(obj=aux0, criterion=criterion)
-            	index.finite<-is.finite(aux$IC)
+            index.finite<-is.finite(aux$IC)
 			IC.finite <- aux$IC[index.finite]
 			opt <- order(IC.finite)[1]
 			IC.s[s] <- IC.finite[opt]
@@ -86,8 +81,8 @@ for (v in 1:num.vn) {
 	} 
 	else {
 		for (s in 1:num.knn) {
-			if (is.null(lambda.seq)) aux <-  try(cv.grpreg(lambda.min=lambda.min, nlambda=nlambda, X=as.matrix(XX[,,s]), y=yy[,s], group=group, penalty=penalty, nfolds=nfolds, max.iter=max.iter, seed=seed), silent=FALSE)
-			else aux <-  try(cv.grpreg(lambda=lambda.seq, X=as.matrix(XX[,,s]), y=yy[,s], group=group, penalty=penalty, nfolds=nfolds, max.iter=max.iter, seed=seed), silent=FALSE)
+			if (is.null(lambda.seq)) aux <-  try(cv.grpreg(lambda.min=lambda.min, nlambda=nlambda, X=as.matrix(XX[,,s]), y=yy[,s], group=group, penalty=penalty, nfolds=nfolds, max.iter=max.iter, seed=seed), silent=TRUE)
+			else aux <-  try(cv.grpreg(lambda=lambda.seq, X=as.matrix(XX[,,s]), y=yy[,s], group=group, penalty=penalty, nfolds=nfolds, max.iter=max.iter, seed=seed), silent=TRUE)
 			if (inherits(aux,"try-error")) {
 				lambda.s[s] <- NaN
 				lambda3.s[s,] <- NaN
@@ -109,7 +104,7 @@ for (v in 1:num.vn) {
 	knn2[v] <- knearest[s.opt]
 	knn3[v,] <- c(min(knearest), knn2[v], max(knearest))
 	IC2[v] <- IC.s[s.opt]
-	aux <- try(grpreg(X=as.matrix(XX[,,s.opt]), y=yy[,s.opt], group=group, lambda=lambda2[v], penalty=penalty, max.iter=max.iter), silent=FALSE)	
+	aux <- try(grpreg(X=as.matrix(XX[,,s.opt]), y=yy[,s.opt], group=group, lambda=lambda2[v], penalty=penalty, max.iter=max.iter), silent=TRUE)	
 	if (inherits(aux,"try-error")) next
 	beta2[[v]] <- aux$beta
 	indexes.beta.nonnull[[v]] <-indexes.beta[beta2[[v]][-1]!=0]
@@ -121,7 +116,7 @@ for (v in 1:num.vn) {
 ind.vn<-order(IC2)[1]
 vn.opt<-vn[ind.vn]
 list(beta=beta2, indexes.beta.nonnull=indexes.beta.nonnull, IC=IC2[ind.vn], lambda=lambda2[ind.vn], lambda.min.opt.max=lambda3[ind.vn,], 
-     knn.min.opt.max=knn3[ind.vn,], knn=knn2[ind.vn], knearest=knearest, Q=Q2[ind.vn], theta=theta, criterion=criterion, penalty=penalty,vn.opt=vn.opt,ind.vn=ind.vn)
+     knn.min.opt.max=knn3[ind.vn,], knn=knn2[ind.vn], knearest=knearest, Q=Q2[ind.vn], criterion=criterion, penalty=penalty,vn.opt=vn.opt,ind.vn=ind.vn)
 }
 
 

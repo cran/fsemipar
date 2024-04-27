@@ -5,13 +5,13 @@
 \alias{predict.sfplsim.kNN}
 
 \title{
-Prediction from functional semiparametric  model estimates
+Prediction for SFPLSIM and MFPLSIM (using FASSMR) 
 }
 \description{
-\code{predict} method for: 
+\code{predict} S3 method for: 
 \itemize{
 \item Semi-functional partial linear single-index model (SFPLSIM) fitted using \code{sfplsim.kernel.fit} or \code{sfplsim.kNN.fit}. 
-\item Multi-functional partial linear single-index regression (MFPLSIM) fitted using \code{FASSMR.kernel.fit} or \code{FASSMR.kNN.fit}.
+\item Multi-functional partial linear single-index model (MFPLSIM) fitted using \code{FASSMR.kernel.fit} or \code{FASSMR.kNN.fit}.
 }
 }
 \usage{
@@ -46,15 +46,15 @@ Allows the choice between 1 and 2. The default is 1. See the section \code{Detai
 }
 }
 \details{
-To obtain the predictions of the response for \code{newdata.x} and \code{newdata.z}, two options are provided:
+Two options are provided to obtain the predictions of the response for \code{newdata.x} and \code{newdata.z}: 
 \itemize{
-\item If \code{option=1}, we mantain all the estimations (\code{k.opt} or \code{h.opt}, \code{theta.est} and \code{beta.est}) to predict the functional single-index component of the model. 
-\item If \code{option=2}, we mantain \code{theta.est} and \code{beta.est}, while the tuning parameter (\eqn{h} or \eqn{k}) is selected again to predict the functional single-index component of the model. This selection is performed using the cross-validation criterion in the functional single-index model associated.
+\item If \code{option=1}, we maintain all the estimations (\code{k.opt} or \code{h.opt}, \code{theta.est} and \code{beta.est}) to predict the functional single-index component of the model. 
+\item If \code{option=2}, we maintain \code{theta.est} and \code{beta.est}, while the tuning parameter (\eqn{h} or \eqn{k}) is selected again to predict the functional single-index component of the model. This selection is performed using the leave-one-out cross-validation criterion in the associated functional single-index model.
 }
 }
 \value{
 The function returns the predicted values of the response (\code{y}) for \code{newdata.x} and \code{newdata.z}. If \code{!is.null(y.test)}, it also provides the mean squared error of prediction (\code{MSEP}) computed as \code{mean((y-y.test)^2)}.
-If \code{is.null(newdata.x)} or \code{is.null(newdata.z)},  the function returns the fitted values.
+If \code{is.null(newdata.x)} or \code{is.null(newdata.z)}, then the function returns the fitted values.
 }
 
 \author{
@@ -81,12 +81,12 @@ test<-161:215
 
 #SFPLSIM fit. Convergence errors for some theta are obtained.
 s.fit.kernel<-sfplsim.kernel.fit(x=X[train,], z=z.com[train,], y=y[train],
-            max.q.h=0.35,lambda.min.h=0.02,lambda.min.l=0.01, 
-            factor.pn=2, max.iter=5000, nknot.theta=4,criterion="BIC", 
-            penalty="grSCAD",nknot=20)
+            max.q.h=0.35,lambda.min.l=0.01, factor.pn=2, nknot.theta=4,
+            criterion="BIC", range.grid=c(850,1050), 
+            nknot=20, max.iter=5000)
 s.fit.kNN<-sfplsim.kNN.fit(y=y[train],x=X[train,], z=z.com[train,], 
-        max.knn=20,lambda.min.h=0.02,lambda.min.l=0.01, factor.pn=2, 
-        nknot.theta=4,criterion="BIC",range.grid=c(850,1050), penalty="grSCAD",
+        max.knn=20,lambda.min.l=0.01, factor.pn=2, nknot.theta=4,
+        criterion="BIC",range.grid=c(850,1050), 
         nknot=20, max.iter=5000)
 
 
@@ -96,7 +96,6 @@ predict(s.fit.kNN,newdata.x=X[test,],newdata.z=z.com[test,],
   y.test=y[test],option=2)
 }
 \donttest{
-
 data(Sugar)
 y<-Sugar$ash
 x<-Sugar$wave.290
@@ -117,14 +116,14 @@ train<-1:216
 test<-217:266
 
 m.fit.kernel <- FASSMR.kernel.fit(x=x.sug[train,],z=z.sug[train,], 
-                  y=y.sug[train],  nknot.theta=2,lambda.min.h=0.03, 
+                  y=y.sug[train],  nknot.theta=2, 
                   lambda.min.l=0.03, max.q.h=0.35,num.h = 10, 
-                  nknot=20,criterion="BIC", penalty="grSCAD",max.iter=5000)
+                  nknot=20,criterion="BIC", max.iter=5000)
 
 
 m.fit.kNN<- FASSMR.kNN.fit(x=x.sug[train,],z=z.sug[train,], y=y.sug[train], 
-            nknot.theta=2,lambda.min.h=0.03, lambda.min.l=0.03, 
-            max.knn=20,nknot=20,criterion="BIC", penalty="grSCAD",max.iter=5000)
+            nknot.theta=2, lambda.min.l=0.03, 
+            max.knn=20,nknot=20,criterion="BIC",max.iter=5000)
 
 
 predict(m.fit.kernel,newdata.x=x.sug[test,],newdata.z=z.sug[test,],
@@ -132,7 +131,5 @@ predict(m.fit.kernel,newdata.x=x.sug[test,],newdata.z=z.sug[test,],
 predict(m.fit.kNN,newdata.x=x.sug[test,],newdata.z=z.sug[test,],
   y.test=y.sug[test],option=2)
 }
-
-
 }
 

@@ -8,7 +8,7 @@
 \alias{summary.IASSMR.kernel}
 \alias{summary.IASSMR.kNN}
 \title{
-Summarize information from multi-functional partial linear single-index model (MFPLSIM) estimation methods
+Summarise information from MFPLSIM estimation
 }
 \description{
 \code{summary} and \code{print} functions for \code{FASSMR.kernel.fit}, \code{FASSMR.kNN.fit}, \code{IASSMR.kernel.fit} and \code{IASSMR.kNN.fit}.
@@ -44,10 +44,10 @@ Output of the \code{FASSMR.kernel.fit}, \code{FASSMR.kNN.fit}, \code{IASSMR.kern
 \item{The number of non-zero components in \code{beta.est}.}
 \item{The indexes of the non-zero components in \code{beta.est}.}
 \item{The optimal value of the penalisation parameter (\code{lambda.opt}).}
-\item{The optimal value of the criterion function, i. e. the value  obtained with \code{w.opt}, \code{lambda.opt}, \code{vn.opt}  and \code{h.opt}/\code{k.opt}}
-\item{Minimum value of the penalized profile least-squares function. That is, the value obtained using \code{theta.est} and \code{beta.est}.}
+\item{The optimal value of the criterion function, i.e. the value  obtained with \code{w.opt}, \code{lambda.opt}, \code{vn.opt}  and \code{h.opt}/\code{k.opt}}
+\item{Minimum value of the penalised least-squares function. That is, the value obtained using \code{theta.est}, \code{beta.est} and \code{lambda.opt}.}
 \item{The penalty function used.}
-\item{The criterion used to select the initial number of covariates used to build the reduced model, the tunning parameter, the penalisation parameter and \code{Vn}.}
+\item{The criterion used to select the number of covariates employed to construct the reduced model, the tuning parameter, the penalisation parameter and \code{vn}.}
 
 
 }

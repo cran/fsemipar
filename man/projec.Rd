@@ -15,21 +15,21 @@ Matrix containing functional data collected by row
 Vector containing the coefficients of \eqn{\theta} in a B-spline basis, so that \code{length(theta)=order.Bspline+nknot.theta}
 }
   \item{order.Bspline}{
-Positive integer giving the order of the B-spline basis functions for the B-spline representation of \eqn{\theta}. This is the number of coefficients in each piecewise polynomial segment. The default is 3.
+Order of the B-spline basis functions for the B-spline representation of \eqn{\theta}. This is the number of coefficients in each piecewise polynomial segment. The default is 3.
 }
   \item{nknot.theta}{
-Positive integer indicating the number of uniform interior knots of the B-spline basis. The default is 3.
+Number of regularly spaced interior knots of the B-spline basis. The default is 3.
 }
   \item{range.grid}{
-Vector of length 2 containing  the range of the discretization of the functional data. If \code{range.grid=NULL}, then \code{range.grid=c(1,p)} is considered, where \code{p} is the size of the discretization size of \code{data} (i.e. \code{ncol(data)}).
+Vector of length 2 containing  the range of the discretisation of the functional data. If \code{range.grid=NULL}, then \code{range.grid=c(1,p)} is considered, where \code{p} is the discretisation size of \code{data} (i.e. \code{ncol(data)}).
 }
   \item{nknot}{
-Positive integer indicating the number of interior knots for the B-spline representation of the functional data. The default value is \code{(p - order.Bspline - 1)\%/\%2}.
+Number of regularly spaced interior knots for the B-spline representation of the functional data. The default value is \code{(p - order.Bspline - 1)\%/\%2}.
 }
 }
 
 \value{
-A matrix with the inner products.
+A matrix containing the inner products.
 }
 \references{
 Novo S., Aneiros, G., and Vieu, P., (2019) Automatic and location-adaptive estimation in functional single--index regression. \emph{Journal of Nonparametric Statistics}, \bold{31(2)}, 364--392, \doi{https://doi.org/10.1080/10485252.2019.1567726}.

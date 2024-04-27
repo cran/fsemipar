@@ -4,10 +4,10 @@
 \alias{predict.fsim.kNN}
 
 \title{
-Prediction from functional single-index model estimates
+Prediction for FSIM
 }
 \description{
-\code{predict} method for functional single-index regression fitted using \code{fsim.kernel.fit} or \code{fsim.kNN.fit}.
+\code{predict} method for the functional single-index model (FSIM) fitted using \code{fsim.kernel.fit}, \code{fsim.kernel.fit.optim}, \code{fsim.kNN.fit} and \code{fsim.kNN.fit.optim}.
 }
 \usage{
 \method{predict}{fsim.kernel}(object, newdata = NULL, y.test = NULL, ...)
@@ -16,7 +16,7 @@ Prediction from functional single-index model estimates
 
 \arguments{
   \item{object}{
-Output of the \code{fsim.kernel.fit} or \code{fsim.kNN.fit} functions (i.e. an object of the class \code{fsim.kernel} or \code{fsim.kNN}).
+Output of the \code{fsim.kernel.fit}, \code{fsim.kernel.fit.optim}, \code{fsim.kNN.fit} or \code{fsim.kNN.fit.optim} functions (i.e. an object of the class \code{fsim.kernel} or \code{fsim.kNN}).
 }
   \item{newdata}{
 A matrix containing new observations of the functional covariate collected by row.
@@ -55,12 +55,11 @@ X<-Tecator$absor.spectra2
 train<-1:160
 test<-161:215
 
-
 #FSIM fit. 
 fit.kernel<-fsim.kernel.fit(y[train],x=X[train,],max.q.h=0.35, nknot=20,
 range.grid=c(850,1050),nknot.theta=4)
-fit.kNN<-fsim.kNN.fit(y=y[train],x=X[train,],max.knn=20,nknot.theta=4,
-nknot=20,range.grid=c(850,1050))
+fit.kNN<-fsim.kNN.fit(y=y[train],x=X[train,],max.knn=20,nknot=20,
+nknot.theta=4, range.grid=c(850,1050))
 
 test<-161:215
 
