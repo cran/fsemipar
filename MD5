@@ -1,4 +1,4 @@
-da0c57316dbbd5d3e2c69a76a7283628 *DESCRIPTION
+da3ba6dae90cfb12220abc8bd1971cc8 *DESCRIPTION
 31a464602422161b03320710dcc6b03c *NAMESPACE
 d65da53683f2328a5a799f62a5cfbcc7 *R/FASSMR.kNN.R
 1dc3fa528137d5ff1e0aaeef693bf253 *R/FASSMR.kNN.fit.R
@@ -65,7 +65,7 @@ dee63493d9b23a963169f73019efac34 *R/sfplsim.kNN.R
 c505310af36e4693552ee0c5123eb39c *R/sfplsim.kernel.fit.R
 31d6a6d3147ccf0a771b52a81cbe720c *R/sfplsim.kernel.fit.fixedtheta.R
 fc6d7ac51d2a76088e3642a15474c962 *R/symsolve.R
-28cc1fcbe4f0a5d45ee544c5475bb0fc *build/partial.rdb
+1c0afa520b7b13f0fbdbb88f3be1f72c *build/partial.rdb
 fb7e57a98c9ac998454b501a4cf248df *data/Sugar.RData
 65ecfbd9f7bc7b1f759eab6ce8c0cffe *data/Tecator.RData
 a84ecbfac06e2c6ede282900136cfc4b *man/FASSMR.kNN.fit.Rd
